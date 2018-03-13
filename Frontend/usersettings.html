@@ -8,11 +8,57 @@
   </head>
 
   <body>
-    
+    <h2>You are following...</h2>
+    <div id='users'>
+      <h3>Users</h3>
+      <div>
+        <input type='text' id='addUserName' placeholder='add user'>
+        <input type='button' id='addUserButton' value='+' onclick='addUser(document.getElementById('addUserName').value)'>
+      </div>
+      <p id='userList'>
+        <!-- The list of users will go here -->
+      </p>
+    </div>
+    <br><br>
+    <div id='hashtags'>
+      <h3>Hashtags</h3>
+      <div>
+        <input type='text' id='addHashtagName' placeholder='add hashtag'>
+        <input type='button' id='addHashtagButton' value='+' onclick='addHashtag(document.getElementById('addHashtagName').value)'>
+      </div>
+      <p id='hashtagList'>
+        <!-- The list of hashtag will go here -->
+      </p>
+    </div>
   </body>
 
   <script>
+    var noOfUsers = 0;
+    var noOfHashtags = 0;
     
+    function addUser(name) {
+      var addition = '';
+      if (noOfUsers != 0) addition = ', ';
+      noOfUsers ++;
+      addition += name;
+      document.getElementById('userList').innerHTML += addition;
+      followUser(name);
+    }
+    
+    function followUser(name) {
+    }
+    
+    function addHashtag(name) {
+      var addition = '';
+      if (noOfHashtags != 0) addition = ', ';
+      noOfHashtags ++;
+      addition += name;
+      document.getElementById('hashtagList').innerHTML += addition;
+      followHashtag(name);
+    }
+    
+    function followHashtag(name) {
+    }
   </script>
 
 </html>
