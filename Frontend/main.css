@@ -15,25 +15,30 @@ body {
 h1 {
   color: #002147;
   text-align: center;
+  font-size: 42px;
 }
 
 h2 {
   color: #003066;
-  font-size: 1.1em;
   text-align: center;
   text-shadow: 1px 1px lightGray;
+  font-size: 48px;
 }
 
 h3 {
   color: #004799;
+  font-size: 36px;
 }
 
 h4 {
   color: #005fcc;
+  font-size: 28px;
 }
 
 h5 {
   color: #0077ff;
+  font-size: 24px;
+ }
 
 .error {
   font-size: 1.1em;
