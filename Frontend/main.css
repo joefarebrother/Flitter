@@ -12,27 +12,27 @@ body {
   background-color: #e6f1ff;
 }
 
-title {
+h1 {
   color: #002147;
   text-align: center;
 }
 
-h1 {
+h2 {
   color: #003066;
   font-size: 1.1em;
   text-align: center;
   text-shadow: 1px 1px lightGray;
 }
 
-h2 {
+h3 {
   color: #004799;
 }
 
-h3 {
+h4 {
   color: #005fcc;
 }
 
-h4 {
+h5 {
   color: #0077ff;
 
 .error {
