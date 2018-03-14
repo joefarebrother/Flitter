@@ -1,7 +1,43 @@
 head {
-  
+  background-color: #b3d6ff;
+  font-family: 'Alegreya Sans', Helvetica, sans-serif;
 }
 
 body {
-  
+  background-color: #cce4ff;
+  font-family: 'Alegreya Sans', Helvetica, sans-serif;
+}
+
+.block {
+  background-color: #e6f1ff;
+}
+
+title {
+  color: #002147;
+  text-align: center;
+}
+
+h1 {
+  color: #003066;
+  font-size: 1.1em;
+  text-align: center;
+  text-shadow: 1px 1px lightGray;
+}
+
+h2 {
+  color: #004799;
+}
+
+h3 {
+  color: #005fcc;
+}
+
+h4 {
+  color: #0077ff;
+
+.error {
+  font-size: 1.1em;
+  color: red;
+  font-weight: bold;
+  text-shadow: 1px 1px lightGray;
 }
