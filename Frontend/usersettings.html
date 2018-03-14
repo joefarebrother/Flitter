@@ -14,6 +14,10 @@
       <div>
         <input type='text' id='addUserName' placeholder='add user'>
         <input type='button' id='addUserButton' value='+' onclick="addUser(document.getElementById('addUserName').value)">
+        <br>
+        <p id='userError' style='error'>
+          <!-- Error messages will go here -->
+        </p>
       </div>
       <p id='userList'>
         <!-- The list of users will go here -->
@@ -25,6 +29,10 @@
       <div>
         <input type='text' id='addHashtagName' placeholder='add hashtag'>
         <input type='button' id='addHashtagButton' value='+' onclick="addHashtag(document.getElementById('addHashtagName').value)">
+        <br>
+        <p id='hashtagError' style='error'>
+          <!-- Error messages will go here -->
+        </p>
       </div>
       <p id='hashtagList'>
         <!-- The list of hashtag will go here -->
@@ -37,28 +45,81 @@
     var noOfHashtags = 0;
     
     function addUser(name) {
-      var addition = '';
-      if (noOfUsers != 0) addition = ', ';
-      noOfUsers ++;
-      addition += name;
-      document.getElementById('userList').innerHTML += addition;
-      followUser(name);
+      if (userValid(name) && !followingUser(name) && userExists(name))
+      {
+        document.getElementById('userError').innerHTML = '';
+        var addition = '';
+        if (noOfUsers != 0) addition = ', ';
+        noOfUsers ++;
+        addition += name;
+        document.getElementById('userList').innerHTML += addition;
+        followUser(name);
+        document.getElementById('addUserName').value = '';
+      }
     }
     
     function followUser(name) {
     }
     
+    function userValid(name) {
+      var valid = true;
+      if (name.substr(0,1) != '@') valid = false;
+      if (!/^[A-Za-z0-9_]{1,15}$/.test(name.substr(1))) valid = false;
+      if (!valid) document.getElementById('userError').innerHTML = 
+        'Invalid name. Names must start with @ and then contain only letters, numbers and underscores.';
+      return valid;
+    }
+    
+    function followingUser(name) {
+      var following =
+        (document.getElementById('userList').innerHTML.search(name) != -1);
+      if (following) document.getElementById('userError').innerHTML = 
+        'You are already following this user.';
+      return following;
+    }
+    
+    function userExists(name) {
+      return true;
+    }
+    
     function addHashtag(name) {
-      var addition = '';
-      if (noOfHashtags != 0) addition = ', ';
-      noOfHashtags ++;
-      addition += name;
-      document.getElementById('hashtagList').innerHTML += addition;
-      followHashtag(name);
+      if (hashtagValid(name) && !followingHashtag(name))
+      {
+        document.getElementById('hashtagError').innerHTML = '';
+        var addition = '';
+        if (noOfHashtags != 0) addition = ', ';
+        noOfHashtags ++;
+        addition += name;
+        document.getElementById('hashtagList').innerHTML += addition;
+        followHashtag(name);
+        document.getElementById('addHashtagName').value = '';
+      }
     }
     
     function followHashtag(name) {
     }
+    
+    function hashtagValid(name) {
+      var valid = true;
+      if (name.substr(0,1) != '#') valid = false;
+      if (!/^[A-Za-z_][A-Za-z0-9_]{0,150}$/.test(name.substr(1))) valid = false;
+      if (!valid) 
+      {
+        document.getElementById('hashtagError').innerHTML = 
+        'Invalid hashtag. Hashtags must start with # and then contain only letters, numbers and underscores. ' +
+        'The # cannot be immediately followed by a number.';
+      }
+      return valid;
+    }
+    
+    function followingHashtag(name) {
+      var following =
+        (document.getElementById('hashtagList').innerHTML.search(name) != -1);
+      if (following) document.getElementById('hashtagError').innerHTML = 
+        'You are already following this hashtag.';
+      return following;
+    }
+    
   </script>
 
 </html>
