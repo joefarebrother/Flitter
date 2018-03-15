@@ -1,10 +1,12 @@
 import scala.List
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 object algorithms {
 
   /***** Tweets *****/
   
-  class Tweet(id: int, user:User, hashtags: List[string], text: string, location: (float, float), retweets: int, favourites: int)
+  class Tweet(id: int, user:User, timestamp: java.time.LocalDate, hashtags: List[string], text: string, location: (float, float), retweets: int, favourites: int)
   // A Tweet object will represent a tweet and all its data
   {
     
@@ -13,7 +15,7 @@ object algorithms {
   
   /***** Users *****/
   
-  class User(id: int, name: string, handle: string, location: string, followers: List[int]) 
+  class User(id: int, name: string, handle: string, location: string, followers: List[User]) 
   // A User object will represent a single user of the system and all their data
   {
     
@@ -45,7 +47,8 @@ object algorithms {
   class Timeliness(me: User) extends Measure
   // Measures relevance by how recent the tweet is
   {
-    
+    // see https://www.hackingnote.com/en/scala/datetime/
+    // and scroll down to section 'Java 8'
   }
   
   class Hashtags(me: User) extends Measure
@@ -74,13 +77,17 @@ object algorithms {
   
   /***** Sorting *****/
   
-  def score(tweet: Tweet, me: User): float
+  class Weighting(location: float, timeliness: float, hashtags: float, tweetPopularity: float)
+  //Defines a weight (given by the user) for each of the measures of relevance
+  { }
+  
+  def score(tweet: Tweet, me: User, weights: Weighting): float =
   // Assigns a score to a given tweet using various measures of relevance
   {
     
   }
   
-  def sort(tweets: List[Tweet]): List[Tweet]
+  def sort(tweets: List[Tweet]): List[Tweet] =
   // Takes a collection of tweets and sorts them by their score
   {
     
