@@ -16,6 +16,7 @@ h1 {
   color: #002147;
   text-align: center;
   font-size: 42px;
+  font-weight: bold;
 }
 
 h2 {
@@ -45,4 +46,10 @@ h5 {
   color: red;
   font-weight: bold;
   text-shadow: 1px 1px lightGray;
+}
+
+button.clear {
+	background-color: rgba(0, 0, 0, 0.0);
+	border: none;
+	color: #800000;
 }
