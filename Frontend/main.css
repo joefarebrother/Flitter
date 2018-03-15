@@ -1,7 +1,55 @@
 head {
-  
+  background-color: #b3d6ff;
+  font-family: 'Alegreya Sans', Helvetica, sans-serif;
 }
 
 body {
-  
+  background-color: #cce4ff;
+  font-family: 'Alegreya Sans', Helvetica, sans-serif;
+}
+
+.block {
+  background-color: #e6f1ff;
+}
+
+h1 {
+  color: #002147;
+  text-align: center;
+  font-size: 42px;
+  font-weight: bold;
+}
+
+h2 {
+  color: #003066;
+  text-align: center;
+  text-shadow: 1px 1px lightGray;
+  font-size: 48px;
+}
+
+h3 {
+  color: #004799;
+  font-size: 36px;
+}
+
+h4 {
+  color: #005fcc;
+  font-size: 28px;
+}
+
+h5 {
+  color: #0077ff;
+  font-size: 24px;
+ }
+
+.error {
+  font-size: 1.1em;
+  color: red;
+  font-weight: bold;
+  text-shadow: 1px 1px lightGray;
+}
+
+button.clear {
+	background-color: rgba(0, 0, 0, 0.0);
+	border: none;
+	color: #800000;
 }
