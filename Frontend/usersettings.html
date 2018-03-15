@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <link href='https://fonts.googleapis.com/css?family=Alegreya Sans' rel='stylesheet'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="main.css">
   
   <head>
@@ -54,6 +55,7 @@
         if (noOfUsers != 0) addition = ', ';
         noOfUsers ++;
         addition += name;
+        addition += " <i class='glyphicon glyphicon-remove' onclick='removeUser(name)'></i>";
         document.getElementById('userList').innerHTML += addition;
         followUser(name);
         document.getElementById('addUserName').value = '';
@@ -82,6 +84,16 @@
     
     function userExists(name) {
       return true;
+    }
+    
+    function removeUser(name) {
+      
+      noOfUsers--;
+      unfollowUser(name);
+    }
+    
+    function unfollowUser(name) {
+      
     }
     
     function addHashtag(name) {
