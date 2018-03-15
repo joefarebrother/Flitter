@@ -52,10 +52,10 @@
       {
         document.getElementById('userError').innerHTML = '';
         var addition = '';
-        if (noOfUsers != 0) addition = ', ';
         noOfUsers ++;
         addition += name;
-        addition += " <i class='glyphicon glyphicon-remove' onclick='removeUser(name)'></i>";
+        addition += "<button class='clear' onclick=\"removeUser('" + name + "')\"> <i class='glyphicon glyphicon-remove'></i></button>  &nbsp;&nbsp;&nbsp;&nbsp;";
+        addition = "<span id='" + name + "'>" + addition + "</span>";
         document.getElementById('userList').innerHTML += addition;
         followUser(name);
         document.getElementById('addUserName').value = '';
@@ -87,7 +87,9 @@
     }
     
     function removeUser(name) {
-      
+      var user = document.getElementById(name);
+      user.outerHTML = '';
+      delete user;
       noOfUsers--;
       unfollowUser(name);
     }
@@ -101,9 +103,10 @@
       {
         document.getElementById('hashtagError').innerHTML = '';
         var addition = '';
-        if (noOfHashtags != 0) addition = ', ';
         noOfHashtags ++;
         addition += name;
+        addition += "<button class='clear' onclick=\"removeHashtag('" + name + "')\"> <i class='glyphicon glyphicon-remove'></i></button>  &nbsp;&nbsp;&nbsp;&nbsp;";
+        addition = "<span id='" + name + "'>" + addition + "</span>";
         document.getElementById('hashtagList').innerHTML += addition;
         followHashtag(name);
         document.getElementById('addHashtagName').value = '';
@@ -134,6 +137,17 @@
       return following;
     }
     
+    function removeHashtag(name) {
+      var hashtag = document.getElementById(name);
+      hashtag.outerHTML = '';
+      delete hashtag;
+      noOfHashtags--;
+      unfollowHashtag(name);
+    }
+    
+    function unfollowHashtag(name) {
+      
+    }
   </script>
 
 </html>
