@@ -43,7 +43,7 @@ object algorithms {
   // Measures relevance by proximity
   {
     def measure(tweet: Tweet): Float = {
-      var value = 0.0; // Value to be returned
+      var value = 0.0f; // Value to be returned
       
       //insert algoritm here
       
@@ -56,7 +56,7 @@ object algorithms {
   // Measures relevance by how recent the tweet is
   {
     def measure(tweet: Tweet): Float = {
-      var value = 0.0; // Value to be returned
+      var value = 0.0f; // Value to be returned
       val current = java.time.LocalDateTime.now()
       val tweetTime  = tweet.getTime
       val age = current.minusYears(tweetTime.getYear).minusDays(tweetTime.getDayOfYear).minusHours(tweetTime.getHour).minusMinutes(tweetTime.getMinute)
@@ -82,7 +82,7 @@ object algorithms {
   // Measures relevance by which hashtags the tweet has
   {
     def measure(tweet: Tweet): Float = {
-      var value = 0.0; // Value to be returned
+      var value = 0.0f; // Value to be returned
       
       //insert algoritm here
       
@@ -95,7 +95,7 @@ object algorithms {
   // Measures relevance by popularity of tweet
   {
     def measure(tweet: Tweet): Float = {
-      var value = 0.0; // Value to be returned
+      var value = 0.0f; // Value to be returned
       
       //insert algoritm here
       
@@ -108,7 +108,7 @@ object algorithms {
   // Measures relevance by popularity of user
   {
     def measure(tweet: Tweet): Float = {
-      var value = 0.0; // Value to be returned
+      var value = 0.0f; // Value to be returned
       
       //insert algoritm here
       
@@ -121,7 +121,7 @@ object algorithms {
   // Measures relevance by proximity
   {
     def measure(tweet: Tweet): Float = {
-      var value = 0.0; // Value to be returned
+      var value = 0.0f; // Value to be returned
       
       //insert algoritm here
       
@@ -143,12 +143,13 @@ object algorithms {
   def score(tweet: Tweet, measures: Measures, weights: Weighting): Float =
   // Assigns a score to a given tweet using various measures of relevance
   {
-    return {
+    /*return { // this doesn't compile
       weights.location * measures.location.measure(tweet) +
       weights.timeliness * measures.timeliness.measure(tweet) +
       weights.hashtags * measures.hashtags.measure(tweet) +
       weights.tweetPopularity * measures.tweetPopularity(tweet)
-    }
+    }*/
+    return 0 // placeholder
   }
   
   def sort(tweets: List[Tweet], user: User, weights:Weighting): List[Tweet] =
@@ -160,6 +161,7 @@ object algorithms {
     val tweetPopularity = new TweetPopularity(user);
     val measures = new Measures(location, timeliness, hashtags, tweetPopularity);
     // ...
+    return List(); // placeholder to make it compile
   }
   
 }
