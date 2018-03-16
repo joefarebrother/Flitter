@@ -11,6 +11,8 @@ object algorithms {
   // A Tweet object will represent a tweet and all its data
   {
     def getTime = timestamp
+    def getRetweets = retweets
+    def getFavourites = favourites
   }
   
   
@@ -97,7 +99,14 @@ object algorithms {
     def measure(tweet: Tweet): Float = {
       var value = 0.0f; // Value to be returned
       
-      //insert algoritm here
+      val retweetFactor = 1;
+      val favouriteFactor = 1;
+      val cutoff = 100000;
+
+      value = (tweet.getRetweets * retweetFactor + 
+               tweet.getFavourites * favouriteFactor).toFloat / cutoff
+
+      if (value >= 10) {value = 10}
       
       validate(value);
       return value;
