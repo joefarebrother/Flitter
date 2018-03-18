@@ -62,8 +62,8 @@ object algorithms {
       val R = 6371.0 * 1000.0
       
       // a = sin^2(avgLong) + cos(x._2) * cos(y._2) * sin^2(avgLat)
-      val a = scala.math.pow(scala.math.sin(avgLongitude), 2.0) +
-              scala.math.cos(x._1)*scala.math.cos(y._1)*scala.math.pow(scala.math.sin(avgLatitude), 2.0)
+      val a = {scala.math.pow(scala.math.sin(avgLongitude), 2.0) +
+              scala.math.cos(x._1)*scala.math.cos(y._1)*scala.math.pow(scala.math.sin(avgLatitude), 2.0)}
       // c = 2 * atan2(sqrt(a), sqrt(1-a))
       val c = 2.0 * scala.math.atan2(scala.math.sqrt(a), scala.math.sqrt(1.0-a))
       // d = R * c
@@ -166,24 +166,39 @@ object algorithms {
   
   /***** Sorting *****/
   
-  class Weighting(proximity: Float, timeliness: Float, hashtags: Float, tweetPopularity: Float)
-  // Defines a weight (given by the user) for each of the measures of relevance
-  { }
+  class Weighting(proximity: Float, 
+                  timeliness: Float, 
+                  hashtags: Float, 
+                  popularity: Float)
+  { 
+    // Defines a weight (given by the user) for each of the measures of relevance
+    def getProximity = proximity
+    def getTimeliness = timeliness
+    def getHashtags = hashtags
+    def getPopularity = popularity
+  }
   
-  class Measures(proximity: Proximity, timeliness: Timeliness, hashtags: Hashtags, tweetPopularity: TweetPopularity)
-  // Stores a Measure object for each of the measures of relevance
-  { }
+  class Measures(proximity: Proximity, 
+                 timeliness: Timeliness, 
+                 hashtags: Hashtags, 
+                 popularity: TweetPopularity)
+  { 
+    // Stores a Measure object for each of the measures of relevance
+    def getProximity = proximity
+    def getTimeliness = timeliness
+    def getHashtags = hashtags
+    def getPopularity = popularity
+  }
   
   def score(tweet: Tweet, measures: Measures, weights: Weighting): Float =
   // Assigns a score to a given tweet using various measures of relevance
   {
-    /*return { // this doesn't compile
-      weights.location * measures.location.measure(tweet) +
-      weights.timeliness * measures.timeliness.measure(tweet) +
-      weights.hashtags * measures.hashtags.measure(tweet) +
-      weights.tweetPopularity * measures.tweetPopularity(tweet)
-    }*/
-    return 0 // placeholder
+    return {
+      weights.getProximity * measures.getProximity.measure(tweet) +
+      weights.getTimeliness * measures.getTimeliness.measure(tweet) +
+      weights.getHashtags * measures.getHashtags.measure(tweet) +
+      weights.getPopularity * measures.getPopularity.measure(tweet)
+    }
   }
   
   def sort(tweets: List[Tweet], user: User, weights:Weighting): List[Tweet] =
@@ -192,10 +207,10 @@ object algorithms {
     val proximity = new Proximity(user);
     val timeliness = new Timeliness(user);
     val hashtags = new Hashtags(user);
-    val tweetPopularity = new TweetPopularity(user);
-    val measures = new Measures(proximity, timeliness, hashtags, tweetPopularity);
-    // ...
-    return List(); // placeholder to make it compile
+    val popularity = new TweetPopularity(user);
+    val measures = new Measures(proximity, timeliness, hashtags, popularity);
+    
+    return tweets.sortWith(score(_, measures, weights) < score(_, measures, weights));
   }
   
 }
