@@ -2,26 +2,36 @@ import scala.List
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import scala.concurrent.duration._
+import scala.math
 
 object algorithms {
+  // Location type is a tuple of floats, representing the Longitude and Latitude respectively
+  type Location = (Float, Float)
 
   /***** Tweets *****/
   
-  class Tweet(id: Int, user:User, timestamp: java.time.LocalDateTime, hashtags: List[String], text: String, location: (Float, Float), retweets: Int, favourites: Int)
+  class Tweet(id: Int, 
+              user:User, 
+              timestamp: java.time.LocalDateTime, 
+              hashtags: List[String], 
+              text: String, 
+              location: (Float, Float), 
+              retweets: Int, favourites: Int)
   // A Tweet object will represent a tweet and all its data
   {
     def getTime = timestamp
     def getRetweets = retweets
     def getFavourites = favourites
+    def getLocation = location
   }
   
   
   /***** Users *****/
   
-  class User(id: Int, name: String, handle: String, location: String, followers: List[User]) 
+  class User(id: Int, name: String, handle: String, location: Location, followers: List[User]) 
   // A User object will represent a single user of the system and all their data
   {
-    
+    def getLocation = location
   }
   
   
@@ -41,16 +51,31 @@ object algorithms {
     }
   }
   
-  class Location(me: User) extends Measure(me)
+  class Proximity(me: User) extends Measure(me)
   // Measures relevance by proximity
   {
+    def dist(x: Location, y: Location) : Float = {
+      // We use the haversine distance, as our location is given as longitude and latitudes
+      val avgLongitude = (x._1 - y._1) / 2.0
+      val avgLatitude = (x._2 - y._2) / 2.0
+      // R is Earth's radius, in meters
+      val R = 6371.0 * 1000.0
+      
+      // a = sin^2(avgLong) + cos(x._2) * cos(y._2) * sin^2(avgLat)
+      val a = scala.math.pow(scala.math.sin(avgLongitude), 2.0) +
+              scala.math.cos(x._1)*scala.math.cos(y._1)*scala.math.pow(scala.math.sin(avgLatitude), 2.0)
+      // c = 2 * atan2(sqrt(a), sqrt(1-a))
+      val c = 2.0 * scala.math.atan2(scala.math.sqrt(a), scala.math.sqrt(1.0-a))
+      // d = R * c
+      return (R * c).toFloat
+    }
+    
     def measure(tweet: Tweet): Float = {
-      var value = 0.0f; // Value to be returned
+      // We return the haversine distance between the `tweet` and the user, `me`
+      val distance = dist(tweet.getLocation, me.getLocation)
       
-      //insert algoritm here
-      
-      validate(value);
-      return value;
+      validate(distance);
+      return distance;
     }
   }
   
@@ -141,11 +166,11 @@ object algorithms {
   
   /***** Sorting *****/
   
-  class Weighting(location: Float, timeliness: Float, hashtags: Float, tweetPopularity: Float)
+  class Weighting(proximity: Float, timeliness: Float, hashtags: Float, tweetPopularity: Float)
   // Defines a weight (given by the user) for each of the measures of relevance
   { }
   
-  class Measures(location: Location, timeliness: Timeliness, hashtags: Hashtags, tweetPopularity: TweetPopularity)
+  class Measures(proximity: Proximity, timeliness: Timeliness, hashtags: Hashtags, tweetPopularity: TweetPopularity)
   // Stores a Measure object for each of the measures of relevance
   { }
   
@@ -164,11 +189,11 @@ object algorithms {
   def sort(tweets: List[Tweet], user: User, weights:Weighting): List[Tweet] =
   // Takes a collection of tweets and sorts them by their score, for a particular user
   {
-    val location = new Location(user);
+    val proximity = new Proximity(user);
     val timeliness = new Timeliness(user);
     val hashtags = new Hashtags(user);
     val tweetPopularity = new TweetPopularity(user);
-    val measures = new Measures(location, timeliness, hashtags, tweetPopularity);
+    val measures = new Measures(proximity, timeliness, hashtags, tweetPopularity);
     // ...
     return List(); // placeholder to make it compile
   }
