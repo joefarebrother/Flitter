@@ -1,152 +1,153 @@
 <!DOCTYPE html>
 <html>
-  <link href='https://fonts.googleapis.com/css?family=Alegreya Sans' rel='stylesheet'>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="main.css">
-  
   <head>
+    <meta charset="UTF-8"> 
+    <link href='https://fonts.googleapis.com/css?family=Alegreya Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <title>flitter</title>
-    <h1>flitter</h1>
-    <h2>User Settings</h2>
   </head>
 
   <body>
+  
+    
+    <h1>flitter</h1>
+    <h2>User Settings</h2>
+  
+
+  
     <h3>You are following...</h3>
     <div id='users'>
-      <h4>Users</h4>
+      <h4>Users &nbsp;<i class='glyphicon glyphicon-user'></i></h4>
       <div>
         <input type='text' id='addUserName' placeholder='add user'>
-        <input type='button' id='addUserButton' value='+' onclick="addUser(document.getElementById('addUserName').value)">
+        <input type='button' id='addUserButton' value='+'>
         <br>
         <p id='userError' class='error'>
           <!-- Error messages will go here -->
         </p>
       </div>
-      <p id='userList'>
+      <ul id='userList'>
         <!-- The list of users will go here -->
-      </p>
+      </ul>
     </div>
-    <br><br>
+    <br/><br/>
     <div id='hashtags'>
-      <h4>Hashtags</h4>
+      <h4>Hashtags &nbsp;<i class='glyphicon glyphicon-tags'></i></h4>
       <div>
         <input type='text' id='addHashtagName' placeholder='add hashtag'>
-        <input type='button' id='addHashtagButton' value='+' onclick="addHashtag(document.getElementById('addHashtagName').value)">
+        <input type='button' id='addHashtagButton' value='+'>
         <br>
         <p id='hashtagError' class='error'>
           <!-- Error messages will go here -->
         </p>
       </div>
-      <p id='hashtagList'>
-        <!-- The list of hashtag will go here -->
-      </p>
+      <ul id='hashtagList'>
+        <!-- The list of hashtags will go here -->
+      </ul>
     </div>
   </body>
 
   <script>
-    var noOfUsers = 0;
-    var noOfHashtags = 0;
+    var users = [];
+    var hashtags = [];
     
-    function addUser(name) {
+    $("#addUserButton").click(()=>{ 
+      var name = $("#addUserName").val();
       if (userValid(name) && !followingUser(name) && userExists(name))
       {
-        document.getElementById('userError').innerHTML = '';
-        var addition = '';
-        noOfUsers ++;
-        addition += name;
-        addition += "<button class='clear' onclick=\"removeUser('" + name + "')\"> <i class='glyphicon glyphicon-remove'></i></button>  &nbsp;&nbsp;&nbsp;&nbsp;";
-        addition = "<span id='" + name + "'>" + addition + "</span>";
-        document.getElementById('userList').innerHTML += addition;
+        $("#userError").text("");
+        $("#addUserName").val("");
+        var addition = $("<li>");       
+        addition.append($("<span>").text(name));
+        addition.append(
+          $("<button class='clear'>")
+          .append("<i class='glyphicon glyphicon-remove'>")
+          .click(()=>{
+            addition.remove();
+            unfollowUser(name);
+          }));
+        $("#userList").append(addition);
+
         followUser(name);
-        document.getElementById('addUserName').value = '';
       }
-    }
+    });
     
     function followUser(name) {
+      users.push(name);
     }
     
     function userValid(name) {
       var valid = true;
-      if (name.substr(0,1) != '@') valid = false;
-      if (!/^[A-Za-z0-9_]{1,15}$/.test(name.substr(1))) valid = false;
-      if (!valid) document.getElementById('userError').innerHTML = 
-        'Invalid name. Names must start with @ and then contain only letters, numbers and underscores.';
+      if (name.substr(0,1) != '@'){valid = false;}
+      if (!/^[A-Za-z0-9_]{1,15}$/.test(name.substr(1))){valid = false;}
+      if (!valid){
+        $('#userError').text('Invalid name. Names must start with @ and then contain only letters, numbers and underscores.');
+      }
       return valid;
     }
     
     function followingUser(name) {
-      var following =
-        (document.getElementById('userList').innerHTML.search(name) != -1);
-      if (following) document.getElementById('userError').innerHTML = 
-        'You are already following this user.';
-      return following;
+      var isFollowing = users.indexOf(name) > -1;
+      if (isFollowing){
+        $('#userError').text('You are already following this user.');
+      }
+      return isFollowing;
     }
     
     function userExists(name) {
       return true;
     }
     
-    function removeUser(name) {
-      var user = document.getElementById(name);
-      user.outerHTML = '';
-      delete user;
-      noOfUsers--;
-      unfollowUser(name);
-    }
-    
     function unfollowUser(name) {
-      
+      users.splice(users.indexOf(name));
     }
     
-    function addHashtag(name) {
+    $("#addHashtagButton").click(()=>{ 
+      var name = $("#addHashtagName").val();
       if (hashtagValid(name) && !followingHashtag(name))
       {
-        document.getElementById('hashtagError').innerHTML = '';
-        var addition = '';
-        noOfHashtags ++;
-        addition += name;
-        addition += "<button class='clear' onclick=\"removeHashtag('" + name + "')\"> <i class='glyphicon glyphicon-remove'></i></button>  &nbsp;&nbsp;&nbsp;&nbsp;";
-        addition = "<span id='" + name + "'>" + addition + "</span>";
-        document.getElementById('hashtagList').innerHTML += addition;
+        $("#hashtagError").text("");
+        $("#addHashtagName").val("");
+        var addition = $("<li>");       
+        addition.append($("<span>").text(name));
+        addition.append(
+          $("<button class='clear'>")
+          .append("<i class='glyphicon glyphicon-remove'>")
+          .click(()=>{
+            addition.remove();
+            unfollowHashtag(name);
+          }));
+        $("#hashtagList").append(addition);
+
         followHashtag(name);
-        document.getElementById('addHashtagName').value = '';
       }
-    }
+    });
     
     function followHashtag(name) {
     }
     
     function hashtagValid(name) {
       var valid = true;
-      if (name.substr(0,1) != '#') valid = false;
-      if (!/^[A-Za-z_][A-Za-z0-9_]{0,150}$/.test(name.substr(1))) valid = false;
-      if (!valid) 
-      {
-        document.getElementById('hashtagError').innerHTML = 
-        'Invalid hashtag. Hashtags must start with # and then contain only letters, numbers and underscores. ' +
-        'The # cannot be immediately followed by a number.';
+      if (name.substr(0,1) != '#') {valid = false;}
+      if (!/^[A-Za-z_][A-Za-z0-9_]{0,150}$/.test(name.substr(1))) {valid = false;}
+      if (!valid) {
+        $('#hashtagError').text('Invalid hashtag. Hashtags must start with # and then contain only letters, numbers and underscores. The # cannot be immediately followed by a number.');
       }
       return valid;
     }
     
     function followingHashtag(name) {
-      var following =
-        (document.getElementById('hashtagList').innerHTML.search(name) != -1);
-      if (following) document.getElementById('hashtagError').innerHTML = 
-        'You are already following this hashtag.';
-      return following;
-    }
-    
-    function removeHashtag(name) {
-      var hashtag = document.getElementById(name);
-      hashtag.outerHTML = '';
-      delete hashtag;
-      noOfHashtags--;
-      unfollowHashtag(name);
+      var isFollowing = hashtags.indexOf(name) > -1;
+      if (isFollowing){
+        $('#hashtagError').text('You are already following this hashtag.');
+      }
+      return isFollowing;
     }
     
     function unfollowHashtag(name) {
-      
+      users.splice(users.indexOf(name));
     }
   </script>
 

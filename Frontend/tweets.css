@@ -1,0 +1,27 @@
+tweet {
+  background-color: #cccccc;
+}
+
+name {
+  font-weight: bold;
+}
+
+handle {
+  color: gray;
+}
+
+relevance {
+  
+}
+
+age {
+  
+}
+
+text {
+  font-size: 2em;
+}
+
+content {
+  background-color: #ffffff;
+}
