@@ -4,12 +4,15 @@
   font-family: 'Alegreya Sans', Helvetica, sans-serif;
   position: -webkit-sticky;
   position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 body {
   background-color: #cce4ff;
   font-family: 'Alegreya Sans', Helvetica, sans-serif;
   height: 100%;
+  z-index: 0;
 }
 
 .block {
