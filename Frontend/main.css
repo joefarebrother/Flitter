@@ -1,15 +1,27 @@
-head {
+.header {
+  padding: 10px;
   background-color: #b3d6ff;
   font-family: 'Alegreya Sans', Helvetica, sans-serif;
+  position: -webkit-sticky;
+  position: sticky;
 }
 
 body {
   background-color: #cce4ff;
   font-family: 'Alegreya Sans', Helvetica, sans-serif;
+  height: 100%;
 }
 
 .block {
   background-color: #e6f1ff;
+  width: 60%;
+  height: 100%;
+  margin: auto;
+  padding-left: 50px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  left: 20%;
+  overflow-y: auto;
 }
 
 h1 {
@@ -17,6 +29,7 @@ h1 {
   text-align: center;
   font-size: 42px;
   font-weight: bold;
+  margin-top: 0px;
 }
 
 h2 {
@@ -24,11 +37,13 @@ h2 {
   text-align: center;
   text-shadow: 1px 1px lightGray;
   font-size: 48px;
+  margin-bottom: 0px;
 }
 
 h3 {
   color: #004799;
   font-size: 36px;
+  margin-top: 0px;
 }
 
 h4 {
@@ -52,4 +67,13 @@ button.clear {
 	background-color: rgba(0, 0, 0, 0.0);
 	border: none;
 	color: #800000;
+}
+
+.scrollList {
+	background-color: #ffffff;
+	height: 180px;
+	width: 95%;
+	-webkit-column-count: 4; /* Chrome, Safari, Opera */
+    -moz-column-count: 4; /* Firefox */
+    column-count: 4;
 }
