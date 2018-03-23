@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8"> 
     <link href='https://fonts.googleapis.com/css?family=Alegreya Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="main.css">
     <title>flitter</title>
   </head>
@@ -10,12 +11,40 @@
   <body>
     <h1>flitter</h1>
     <h2>Algorithm Settings</h2>
-  
     
+    <div>
+      <h3>Features</h3>
+      <h4>Adjust importance to affect your news feed</h4>
+      <div class="slidecontainer">
+        <h5>Proximity <i class='glyphicon glyphicon-map-marker'></i></h5>
+        <p>How close you are to the geographical location on the tweet</p>
+        <input type="range" min="1" max="5" value="5" class="slider" id="proximity">
+      </div>
+      <div class="slidecontainer">
+        <h5>Timeliness <i class='glyphicon glyphicon-time'></i></h5>
+        <p>How recent the tweet is</p>
+        <input type="range" min="1" max="5" value="5" class="slider" id="timeliness">
+      </div>
+      <div class="slidecontainer">
+        <h5>Hashtags <i class='glyphicon glyphicon-tags'></i></h5>
+        <p>How well the hashtags match those which you are following</p>
+        <input type="range" min="1" max="5" value="5" class="slider" id="hashtags">
+      </div>
+      <div class="slidecontainer">
+        <h5>Tweet Popularity <i class='glyphicon glyphicon-fire'></i></h5>
+        <p>How many people have retweeted or favourited the tweet</p>
+        <input type="range" min="1" max="5" value="5" class="slider" id="tweetPopularity">
+      </div>
+    </div>
+    
+    <br><br>
+    <input type='button' id='go' value='GO'>
   </body>
 
   <script>
-    
+    $("#go").click(()=>{
+      //Refresh news feed
+    });
   </script>
 
 </html>
