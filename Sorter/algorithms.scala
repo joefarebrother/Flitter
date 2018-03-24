@@ -29,7 +29,12 @@ object algorithms {
   
   /***** Users *****/
   
-  class User(id: Int, name: String, handle: String, location: Location, followers: List[User]) 
+  class User(id: Int,
+             name: String,
+             handle: String,
+             location: Location,
+             usersFollowing: List[User],
+             hashtagsFollowing: List[String]) 
   // A User object will represent a single user of the system and all their data
   {
     def getLocation = location
