@@ -1,27 +1,29 @@
-tweet {
-  background-color: #cccccc;
+.tweet {
+  background-color: #f5fAff;
+  width: 90%;
+  font-size: 1.35em;
 }
 
-name {
+.name {
   font-weight: bold;
 }
 
-handle {
+.handle {
   color: gray;
 }
 
-relevance {
+.relevance {
   
 }
 
-age {
+.age {
   
 }
 
-text {
-  font-size: 2em;
+.text {
+  font-size: 1.4em;
 }
 
-content {
+.content {
   background-color: #ffffff;
 }
