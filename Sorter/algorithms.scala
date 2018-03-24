@@ -23,6 +23,7 @@ object algorithms {
     def getRetweets = retweets
     def getFavourites = favourites
     def getLocation = location
+	def getHashtags = hashtags
   }
   
   
@@ -110,6 +111,8 @@ object algorithms {
   {
     def measure(tweet: Tweet): Float = {
       var value = 0.0f; // Value to be returned
+	  val hashtags = tweet.getHashtags
+		
       
       //insert algoritm here
       
