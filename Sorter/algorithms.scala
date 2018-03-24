@@ -23,15 +23,22 @@ object algorithms {
     def getRetweets = retweets
     def getFavourites = favourites
     def getLocation = location
+	def getHashtags = hashtags
   }
   
   
   /***** Users *****/
   
-  class User(id: Int, name: String, handle: String, location: Location, followers: List[User]) 
+  class User(id: Int,
+             name: String,
+             handle: String,
+             location: Location,
+             usersFollowing: List[User],
+             hashtagsFollowing: List[String]) 
   // A User object will represent a single user of the system and all their data
   {
     def getLocation = location
+	def gethashtagsFollowing = hashtagsFollowing
   }
   
   
@@ -110,8 +117,24 @@ object algorithms {
   {
     def measure(tweet: Tweet): Float = {
       var value = 0.0f; // Value to be returned
-      
-      //insert algoritm here
+	  val hashtags = tweet.getHashtags
+	  val hashtagsFollowing = me.gethashtagsFollowing
+      val usersize = hashtagsFollowing.size
+	  val tweetsize = hashtags.size
+	  var n=0
+	  var i=0
+	  var j=0
+	  
+	// n is the number of matching hashtags
+	  for(i <- 0 to usersize-1)
+	  {
+		  for(j <- 0 to tweetsize-1)
+		  {
+			if(hashtagsFollowing(i)==hashtags(j)){n = n+1}
+		  }
+	  }
+    // 0<= n/usersize <= 1
+	value = (n/usersize)*10
       
       validate(value);
       return value;
