@@ -16,14 +16,15 @@ object algorithms {
               hashtags: List[String], 
               text: String, 
               location: (Float, Float), 
-              retweets: Int, favourites: Int)
+              retweets: Int, favourites: Int,
+	      score: Float)
   // A Tweet object will represent a tweet and all its data
   {
     def getTime = timestamp
     def getRetweets = retweets
     def getFavourites = favourites
     def getLocation = location
-	def getHashtags = hashtags
+    def getHashtags = hashtags
   }
   
   
@@ -38,7 +39,7 @@ object algorithms {
   // A User object will represent a single user of the system and all their data
   {
     def getLocation = location
-	def gethashtagsFollowing = hashtagsFollowing
+    def gethashtagsFollowing = hashtagsFollowing
   }
   
   
@@ -216,12 +217,14 @@ object algorithms {
   def score(tweet: Tweet, measures: Measures, weights: Weighting): Float =
   // Assigns a score to a given tweet using various measures of relevance
   {
-    return {
+    val result = {
       weights.getProximity * measures.getProximity.measure(tweet) +
       weights.getTimeliness * measures.getTimeliness.measure(tweet) +
       weights.getHashtags * measures.getHashtags.measure(tweet) +
       weights.getPopularity * measures.getPopularity.measure(tweet)
     }
+    tweet.score = result;
+    return result;
   }
   
   def sort(tweets: List[Tweet], user: User, weights:Weighting): List[Tweet] =
