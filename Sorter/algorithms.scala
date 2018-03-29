@@ -5,8 +5,7 @@ import scala.concurrent.duration._
 import scala.math
 
 object algorithms {
-  // Location type is a tuple of floats, representing the Longitude and Latitude respectively
-  type Location = (Float, Float)
+  case class Location(lat: Float, long: Float)
 
   /***** Tweets *****/
   
@@ -56,14 +55,14 @@ object algorithms {
   {
     def dist(x: Location, y: Location) : Float = {
       // We use the haversine distance, as our location is given as longitude and latitudes
-      val avgLongitude = (x._1 - y._1) / 2.0
-      val avgLatitude = (x._2 - y._2) / 2.0
+      val avgLongitude = (x.long - y.long) / 2.0
+      val avgLatitude = (x.lat - y.lat) / 2.0
       // R is Earth's radius, in meters
       val R = 6371.0 * 1000.0
       
-      // a = sin^2(avgLong) + cos(x._2) * cos(y._2) * sin^2(avgLat)
+      // a = sin^2(avgLong) + cos(x.lat) * cos(y.lat) * sin^2(avgLat)
       val a = {scala.math.pow(scala.math.sin(avgLongitude), 2.0) +
-              scala.math.cos(x._1)*scala.math.cos(y._1)*scala.math.pow(scala.math.sin(avgLatitude), 2.0)}
+              scala.math.cos(x.long)*scala.math.cos(y.long)*scala.math.pow(scala.math.sin(avgLatitude), 2.0)}
       // c = 2 * atan2(sqrt(a), sqrt(1-a))
       val c = 2.0 * scala.math.atan2(scala.math.sqrt(a), scala.math.sqrt(1.0-a))
       // d = R * c

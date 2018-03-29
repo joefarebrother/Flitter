@@ -1,4 +1,4 @@
-Sorter/*.class
+*.class
 .env
 logs
 project/project
