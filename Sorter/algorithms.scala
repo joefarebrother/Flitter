@@ -10,37 +10,29 @@ object algorithms {
 
   /***** Tweets *****/
   
-  class Tweet(id: Int, 
-              user:User, 
-              timestamp: java.time.LocalDateTime, 
-              hashtags: List[String], 
-              text: String, 
-              location: (Float, Float), 
-              retweets: Int, favourites: Int,
-	      score: Float)
-  // A Tweet object will represent a tweet and all its data
+  case class Tweet(id: Int, 
+                   user:User, 
+                   timestamp: java.time.LocalDateTime, 
+                   hashtags: List[String], 
+                   text: String, 
+                   location: Location, 
+                   retweets: Int, 
+                   favourites: Int)
   {
-    def getTime = timestamp
-    def getRetweets = retweets
-    def getFavourites = favourites
-    def getLocation = location
-    def getHashtags = hashtags
+    var score = 0: Float
   }
+  // A Tweet object will represent a tweet and all its data
   
   
   /***** Users *****/
   
-  class User(id: Int,
-             name: String,
-             handle: String,
-             location: Location,
-             usersFollowing: List[User],
-             hashtagsFollowing: List[String]) 
+  case class User(id: Int,
+                  name: String,
+                  handle: String,
+                  location: Location,
+                  usersFollowing: List[User],
+                  hashtagsFollowing: List[String]) 
   // A User object will represent a single user of the system and all their data
-  {
-    def getLocation = location
-    def gethashtagsFollowing = hashtagsFollowing
-  }
   
   
   /***** Measures of Relevance *****/
@@ -80,7 +72,7 @@ object algorithms {
     
     def measure(tweet: Tweet): Float = {
       // We return the haversine distance between the `tweet` and the user, `me`
-      val distance = dist(tweet.getLocation, me.getLocation)
+      val distance = dist(tweet.location, me.location)
       
       validate(distance);
       return distance;
@@ -93,7 +85,7 @@ object algorithms {
     def measure(tweet: Tweet): Float = {
       var value = 0.0f; // Value to be returned
       val current = java.time.LocalDateTime.now()
-      val tweetTime  = tweet.getTime
+      val tweetTime  = tweet.timestamp
       val age = current.minusYears(tweetTime.getYear).minusDays(tweetTime.getDayOfYear).minusHours(tweetTime.getHour).minusMinutes(tweetTime.getMinute)
       val ageInMins = age.getYear * 525600 + age.getDayOfYear * 1440 + age.getHour * 60 + age.getMinute
       //if age > 1 month, score = 0
@@ -118,25 +110,22 @@ object algorithms {
   {
     def measure(tweet: Tweet): Float = {
       var value = 0.0f; // Value to be returned
-	  val hashtags = tweet.getHashtags
-	  val hashtagsFollowing = me.gethashtagsFollowing
+      val hashtags = tweet.hashtags
+      val hashtagsFollowing = me.hashtagsFollowing
       val usersize = hashtagsFollowing.size
-	  val tweetsize = hashtags.size
-	  var n=0
-	  var i=0
-	  var j=0
-	  
-	// n is the number of matching hashtags
-	  for(i <- 0 to usersize-1)
-	  {
-		  for(j <- 0 to tweetsize-1)
-		  {
-			if(hashtagsFollowing(i)==hashtags(j)){n = n+1}
-		  }
-	  }
-    // 0<= n/usersize <= 1
-	value = (n/usersize)*10
-      
+      var n=0
+
+      // n is the number of matching hashtags
+      for(following <- hashtagsFollowing)
+      {
+        for(tag <- hashtags)
+        {
+          if(following==tag){n = n+1}
+        }
+      }
+      // 0<= n/usersize <= 1
+      value = (n/usersize)*10
+
       validate(value);
       return value;
     }
@@ -152,8 +141,8 @@ object algorithms {
       val favouriteFactor = 1;
       val cutoff = 100000;
 
-      value = (tweet.getRetweets * retweetFactor + 
-               tweet.getFavourites * favouriteFactor).toFloat / cutoff
+      value = (tweet.retweets * retweetFactor + 
+               tweet.favourites * favouriteFactor).toFloat / cutoff
 
       if (value >= 10) {value = 10}
       
@@ -190,38 +179,27 @@ object algorithms {
   
   /***** Sorting *****/
   
-  class Weighting(proximity: Float, 
-                  timeliness: Float, 
-                  hashtags: Float, 
-                  popularity: Float)
-  { 
-    // Defines a weight (given by the user) for each of the measures of relevance
-    def getProximity = proximity
-    def getTimeliness = timeliness
-    def getHashtags = hashtags
-    def getPopularity = popularity
-  }
+  // Defines a weight (given by the user) for each of the measures of relevance
+  case class Weighting(proximity: Float, 
+                       timeliness: Float, 
+                       hashtags: Float, 
+                       popularity: Float)
+    
+
   
-  class Measures(proximity: Proximity, 
-                 timeliness: Timeliness, 
-                 hashtags: Hashtags, 
-                 popularity: TweetPopularity)
-  { 
-    // Stores a Measure object for each of the measures of relevance
-    def getProximity = proximity
-    def getTimeliness = timeliness
-    def getHashtags = hashtags
-    def getPopularity = popularity
-  }
+  case class Measures(proximity: Proximity, 
+                      timeliness: Timeliness, 
+                      hashtags: Hashtags, 
+                      popularity: TweetPopularity)
   
   def score(tweet: Tweet, measures: Measures, weights: Weighting): Float =
   // Assigns a score to a given tweet using various measures of relevance
   {
     val result = {
-      weights.getProximity * measures.getProximity.measure(tweet) +
-      weights.getTimeliness * measures.getTimeliness.measure(tweet) +
-      weights.getHashtags * measures.getHashtags.measure(tweet) +
-      weights.getPopularity * measures.getPopularity.measure(tweet)
+      weights.proximity * measures.proximity.measure(tweet) +
+      weights.timeliness * measures.timeliness.measure(tweet) +
+      weights.hashtags * measures.hashtags.measure(tweet) +
+      weights.popularity * measures.popularity.measure(tweet)
     }
     tweet.score = result;
     return result;
