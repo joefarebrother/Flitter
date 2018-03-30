@@ -9,3 +9,4 @@ See the [Heroku scala tutorial](https://devcenter.heroku.com/articles/getting-st
 then go to http://localhost:5000
 
 The frontend has been spread across /app/views for the HTML, and /public for the CSS and JS. 
+The sorter has now been moved to /app
