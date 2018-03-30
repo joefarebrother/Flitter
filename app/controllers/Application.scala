@@ -81,11 +81,11 @@ object Application extends Controller {
   	var rs = pstmt.executeQuery()
   	if (!rs.next){
   		pstmt = conn.prepareStatement("INSERT INTO users (handle) VALUES(?)")
-  		pstmt.setNString(1, handle)
+  		pstmt.setString(1, handle)
   		pstmt.executeUpdate()
 
   		pstmt = conn.prepareStatement("SELECT * FROM users WHERE handle = ?")
-  		pstmt.setNString(1, handle)
+  		pstmt.setString(1, handle)
   		rs = pstmt.executeQuery()
   		assert(rs.next)
   	}
