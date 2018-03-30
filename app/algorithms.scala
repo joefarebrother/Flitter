@@ -12,7 +12,7 @@ object algorithms {
   /***** Tweets *****/
   
   case class Tweet(id: Int, 
-                   user:User, 
+                   user:String, // tweets have a twitter user, not a user of our system
                    timestamp: java.time.LocalDateTime, 
                    hashtags: List[String], 
                    text: String, 
@@ -74,9 +74,9 @@ object algorithms {
     def measure(tweet: Tweet): Float = {
       // We return the haversine distance between the `tweet` and the user, `me`
       val distance = dist(tweet.location, me.location)
-      
-      validate(distance);
-      return distance;
+      val value = (math.min(10, distance))
+      validate(value);
+      return value;
     }
   }
   

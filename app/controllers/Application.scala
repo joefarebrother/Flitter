@@ -8,8 +8,21 @@ import play.api.cache.Cache
 import play.api.Play.current
 
 import play.api.db._
+import play.api.libs.json._
+
+import java.time.LocalDateTime
 
 object Application extends Controller {
+
+	implicit val locWrites = Json.writes[algorithms.Location]
+	val tweetWrites1 = Json.writes[algorithms.Tweet] // doesn't include score
+
+	implicit val tweetWrites = new Writes[algorithms.Tweet]{
+		def writes(tweet: algorithms.Tweet) = {
+			tweetWrites1.writes(tweet) ++ Json.obj("score" -> tweet.score)
+		}
+	}
+
 
   def index = Action {
     Ok(views.html.index())
@@ -90,6 +103,43 @@ object Application extends Controller {
 
   	Ok("")
   		
+  }
+
+  def getTweets = Action {
+  	// 	TODO: This is where the backend interface is required
+  	val the_tweets = List(
+  		new algorithms.Tweet(
+  			id=1,
+  			user="placeholder",
+  			timestamp=java.time.LocalDateTime.now(),
+  			hashtags=List("test", "changeme"),
+  			text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. #test #changeme",
+  			location=new algorithms.Location(
+  				lat= 51.752022f,
+  				long= -1.257677f), //Oxford
+  			retweets=420,
+  			favourites=69
+  		),
+  		new algorithms.Tweet(
+  			id=2,
+  			user="RickAstley",
+  			timestamp=java.time.LocalDateTime.now(),
+  			hashtags=List("rickroll"),
+  			text="Never gonna give you up! #rickroll",
+  			location = new algorithms.Location(lat=0, long=0),
+  			retweets=1337,
+  			favourites=42
+  		)
+  	)
+
+  	val user_handle = "user1"
+  	DB.withConnection { conn =>
+  		val user = getUserWithFollowing(conn, getUserByHandle(conn, user_handle))
+  		val weights = getWeighting(conn, user)
+  		val sorted = algorithms.sort(the_tweets, user, weights)
+
+  		Ok(Json.toJson(sorted.take(100))) 	
+  	}
   }
 
   def getUserByHandle(conn: java.sql.Connection, handle: String) = {
