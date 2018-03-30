@@ -64,7 +64,7 @@ object Application extends Controller {
   	val stmt = conn.createStatement
   	stmt.executeUpdate(
   		"CREATE TABLE IF NOT EXISTS users ("
-  	  + "id int SERIAL,"
+  	  + "id SERIAL,"
   	  + "name varchar DEFAULT '',"
       + "handle varchar,"
       + "lat float DEFAULT 51.752022,"
