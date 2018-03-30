@@ -53,7 +53,7 @@ object Application extends Controller {
   		pstmt.setFloat(2, getParam("timeliness"))
   		pstmt.setFloat(3, getParam("hashtags"))
   		pstmt.setFloat(4, getParam("popularity"))
-  		pstmt.setNString(5, user_handle)
+  		pstmt.setString(5, user_handle)
   		pstmt.executeUpdate()
   	}
   	Ok("")
@@ -77,7 +77,7 @@ object Application extends Controller {
       + "PRIMARY KEY(id))");
 
   	var pstmt = conn.prepareStatement("SELECT * FROM users WHERE handle = ?")
-  	pstmt.setNString(1, handle)
+  	pstmt.setString(1, handle)
   	var rs = pstmt.executeQuery()
   	if (!rs.next){
   		pstmt = conn.prepareStatement("INSERT INTO users (handle) VALUES(?)")
