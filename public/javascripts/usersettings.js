@@ -17,6 +17,7 @@ function addToList(name, errID, inputID, listID, remove){
 }
 
 function addUser(name){
+  console.log(name)
   addToList(name, "#userError","#addUserName", "#userList", unfollowUser);
 }
 
