@@ -16,7 +16,12 @@ object Application extends Controller {
   }
 
   def usersettings = Action {
-    Ok(views.html.usersettings())
+  	val user_handle = "user1" // placeholder
+  	DB.withConnection{conn =>
+  		Ok(views.html.usersettings(
+  			getUserWithFollowing(conn, getUserByHandle(conn, user_handle))))
+  	}
+    
   }
 
   def algorithmsettings = Action {
@@ -27,6 +32,30 @@ object Application extends Controller {
   	}
     
   }
+
+  def followUser = updateFollows("INSERT INTO usersFollowing (uid following) VALUES (? ?)")
+
+  def unfollowUser = updateFollows("DELETE FROM usersFollowing WHERE uid = ? AND following = ?")
+
+  def followHashtag = updateFollows("INSERT INTO hashtagsFollowing (uid following) VALUES (? ?)")
+
+	def unfollowHashtag = updateFollows("DELETE FROM hashtagsFollowing WHERE uid = ? AND following = ?")
+
+
+
+  def updateFollows(query: String) = Action {req =>
+  	val user_handle = "user1" // placeholder
+  	DB.withConnection{conn =>
+  		val user = getUserByHandle(conn, user_handle)
+  		val pstmt = conn.prepareStatement(query)
+  		pstmt.setInt(1, user.id)
+  		pstmt.setString(2, req.getQueryString("name").getOrElse(""))
+  		pstmt.executeUpdate()
+  	}
+  	Ok("")
+  }
+
+  
 
   def setAlgSettings = Action { req =>
   	def getParam(key: String) = {
@@ -56,6 +85,9 @@ object Application extends Controller {
   		pstmt.setString(5, user_handle)
   		pstmt.executeUpdate()
   	}
+
+  	// could update scores for each tweet here
+
   	Ok("")
   		
   }
@@ -114,5 +146,43 @@ object Application extends Controller {
   		hashtags=rs.getFloat("setting_hashtags"),
   		popularity=rs.getFloat("setting_popularity")
   	)
+  }
+
+  def getUserWithFollowing(conn: java.sql.Connection, user: algorithms.User) = {
+  	createFollowingTables(conn)
+  	var pstmt = conn.prepareStatement("SELECT * FROM usersFollowing WHERE uid = ?")
+  	pstmt.setInt(1, user.id)
+  	var rs = pstmt.executeQuery()
+  	var res1 = List[String]()
+  	while(rs.next){
+  		res1 = rs.getString("following") :: res1
+  	}
+  	
+  	pstmt = conn.prepareStatement("SELECT * FROM hashtagsFollowing WHERE uid = ?")
+  	pstmt.setInt(1, user.id)
+  	rs = pstmt.executeQuery()
+  	var res2 = List[String]()
+  	while(rs.next){
+  		res2 = rs.getString("following") :: res2
+  	}
+
+  	user.copy(usersFollowing=res1, hashtagsFollowing=res2)
+
+  }
+
+  def createFollowingTables(conn: java.sql.Connection) = {
+  	val stmt = conn.createStatement
+  	stmt.executeUpdate(
+  		"CREATE TABLE IF NOT EXISTS usersFollowing ("
+  		+ "id SERIAL,"
+  		+ "uid integer REFERENCES users(id),"
+  		+ "following varchar,"
+  		+ "PRIMARY KEY(id))")
+  	stmt.executeUpdate(
+  		"CREATE TABLE IF NOT EXISTS hashtagsFollowing ("
+  		+ "id SERIAL,"
+  		+ "uid integer REFERENCES users(id),"
+  		+ "following varchar,"
+  		+ "PRIMARY KEY(id))")
   }
 }

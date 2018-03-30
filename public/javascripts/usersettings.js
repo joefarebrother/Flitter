@@ -1,29 +1,59 @@
-var users = [];
-var hashtags = [];
+$.map(users, (i,u)=>{addUser(u)})
+$.map(hashtags, (i,h)=>{addHashtag(h)})
+
+function addToList(name, errID, inputID, listID, remove){
+  $(errID).text("");
+  $(inputID).val("");
+  var addition = $("<li>");       
+  addition.append($("<span>").text(name));
+  addition.append(
+    $("<button class='clear'>")
+    .append("<i class='glyphicon glyphicon-remove'>")
+    .click(()=>{
+      addition.remove();
+      remove(name, addition);
+    }));
+  $(listID).append(addition);
+}
+
+function addUser(name){
+  addToList(name, "#userError","#addUserName", "#userList", unfollowUser);
+}
 
 $("#addUserButton").click(()=>{ 
   var name = $("#addUserName").val();
   if (userValid(name) && !followingUser(name) && userExists(name))
   {
-    $("#userError").text("");
-    $("#addUserName").val("");
-    var addition = $("<li>");       
-    addition.append($("<span>").text(name));
-    addition.append(
-      $("<button class='clear'>")
-      .append("<i class='glyphicon glyphicon-remove'>")
-      .click(()=>{
-        addition.remove();
-        unfollowUser(name);
-      }));
-    $("#userList").append(addition);
-
     followUser(name);
   }
 });
 
 function followUser(name) {
-  users.push(name);
+  $.ajax({
+    url: "api/followUser",
+    data: {name:name.substring(1)},
+    success: ()=>{
+      addUser(name)
+      users.push(name)
+    },
+    error: ()=>{
+      $("#userError").text("An error occoured.")
+    }
+  })
+}
+
+function unfollowUser(name, elem) {
+  $.ajax({
+    url: "api/unfollowUser",
+    data: {name:name.substring(1)},
+    success: ()=>{
+      elem.remove()
+      users.splice(users.indexOf(name))
+    },
+    error: ()=>{
+      $("#userError").text("An error occoured.")
+    }
+  })
 }
 
 function userValid(name) {
@@ -48,32 +78,46 @@ function userExists(name) {
   return true;
 }
 
-function unfollowUser(name) {
-  users.splice(users.indexOf(name));
+
+
+function addHashtag(name){
+  addToList(name, "#hashtagError", "#addHashtagName", "#hashtagList", unfollowHashtag)
 }
 
 $("#addHashtagButton").click(()=>{ 
   var name = $("#addHashtagName").val();
   if (hashtagValid(name) && !followingHashtag(name))
   {
-    $("#hashtagError").text("");
-    $("#addHashtagName").val("");
-    var addition = $("<li>");       
-    addition.append($("<span>").text(name));
-    addition.append(
-      $("<button class='clear'>")
-      .append("<i class='glyphicon glyphicon-remove'>")
-      .click(()=>{
-        addition.remove();
-        unfollowHashtag(name);
-      }));
-    $("#hashtagList").append(addition);
-
     followHashtag(name);
   }
 });
 
 function followHashtag(name) {
+  $.ajax({
+    url: "api/followHashtag",
+    data: {name:name.substring(1)},
+    success: ()=>{
+      addHashtag(name)
+      hashtags.push(name)
+    },
+    error: ()=>{
+      $("#hashtagError").text("An error occoured.")
+    }
+  })
+}
+
+function unfollowHashtag(name, elem) {
+  $.ajax({
+    url: "api/unfollowHashtag",
+    data: {name:name.substring(1)},
+    success: ()=>{
+      elem.remove()
+      hashtags.splice(hashtags.indexOf(name))
+    },
+    error: ()=>{
+      $("#hashtagError").text("An error occoured.")
+    }
+  })
 }
 
 function hashtagValid(name) {
@@ -92,8 +136,4 @@ function followingHashtag(name) {
     $('#hashtagError').text('You are already following this hashtag.');
   }
   return isFollowing;
-}
-
-function unfollowHashtag(name) {
-  users.splice(users.indexOf(name));
 }

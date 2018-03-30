@@ -31,7 +31,7 @@ object algorithms {
                   name: String,
                   handle: String,
                   location: Location,
-                  usersFollowing: List[User],
+                  usersFollowing: List[String], // we're following a list of TWITTER users, not users of our system
                   hashtagsFollowing: List[String]) 
   // A User object will represent a single user of the system and all their data
   
