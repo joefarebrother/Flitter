@@ -1,5 +1,5 @@
-$.map(users, (i,u)=>{addUser(u)})
-$.map(hashtags, (i,h)=>{addHashtag(h)})
+$.map(users, u=>{addUser(u)})
+$.map(hashtags, h=>{addHashtag(h)})
 
 function addToList(name, errID, inputID, listID, remove){
   $(errID).text("");
