@@ -1,5 +1,7 @@
 package controllers
 
+import algorithms._
+
 import play.api._
 import play.api.mvc._
 import play.api.cache.Cache
@@ -18,6 +20,99 @@ object Application extends Controller {
   }
 
   def algorithmsettings = Action {
-    Ok(views.html.algorithmsettings())
+  	val user_handle = "user1" // placeholder
+  	DB.withConnection{conn =>
+  		Ok(views.html.algorithmsettings(
+  			getWeighting(conn, getUserByHandle(conn, user_handle))))
+  	}
+    
+  }
+
+  def setAlgSettings = Action { req =>
+  	def getParam(key: String) = {
+			req.getQueryString(key) match {
+				case None => 1f
+				case Some(str) => try { 
+					math.max(1f, str.toFloat)
+				} catch {
+					case e: NumberFormatException => 1f
+				}
+			}
+		}
+
+  	val user_handle = "user1" // placeholder
+  	DB.withConnection { conn =>
+  		val pstmt = conn.prepareStatement(
+  			"UPDATE users SET "
+  			+ "setting_proximity = ?,"
+  			+ "setting_timeliness = ?,"
+  			+ "setting_hashtags = ?,"
+  			+ "setting_popularity = ?"
+  			+ "WHERE handle = ?")
+  		pstmt.setFloat(1, getParam("proximity"))
+  		pstmt.setFloat(2, getParam("timeliness"))
+  		pstmt.setFloat(3, getParam("hashtags"))
+  		pstmt.setFloat(4, getParam("popularity"))
+  		pstmt.setNString(5, user_handle)
+  		pstmt.executeUpdate()
+  	}
+  	Ok("")
+  		
+  }
+
+  def getUserByHandle(conn: java.sql.Connection, handle: String) = {
+  	val stmt = conn.createStatement
+  	stmt.executeUpdate(
+  		"CREATE TABLE IF NOT EXISTS users ("
+  	  + "id int NOT NULL AUTO_INCREMENT,"
+  	  + "name varchar(255) DEFAULT '',"
+      + "handle varchar(255),"
+      + "lat float DEFAULT 51.752022,"
+      + "long float DEFAULT -1.257677," // default is Oxford
+      + "setting_proximity float DEFAULT 1,"
+      + "setting_timeliness float DEFAULT 1,"
+      + "setting_hashtags float DEFAULT 1,"
+      + "setting_popularity float DEFAULT 1,"
+      + "setinng_userrelation float DEFAULT 1,"
+      + "PRIMARY KEY(id))");
+
+  	var pstmt = conn.prepareStatement("SELECT * FROM users WHERE handle = ?")
+  	pstmt.setNString(1, handle)
+  	var rs = pstmt.executeQuery()
+  	if (!rs.next){
+  		pstmt = conn.prepareStatement("INSERT INTO users (handle) VALUES(?)")
+  		pstmt.setNString(1, handle)
+  		pstmt.executeUpdate()
+
+  		pstmt = conn.prepareStatement("SELECT * FROM users WHERE handle = ?")
+  		pstmt.setNString(1, handle)
+  		rs = pstmt.executeQuery()
+  		assert(rs.next)
+  	}
+
+  	new algorithms.User(
+  		id=rs.getInt("id"),
+  		name=rs.getString("name"),
+  		handle=handle,
+  		location=new algorithms.Location(
+  			lat=rs.getFloat("lat"),
+  			long=rs.getFloat("long")
+  		),
+  		usersFollowing=List(),
+  		hashtagsFollowing=List()
+  	)
+  }
+
+  def getWeighting(conn: java.sql.Connection, user: algorithms.User) = {
+  	val pstmt = conn.prepareStatement("SELECT * FROM users WHERE id = ?")
+  	pstmt.setInt(1, user.id)
+  	val rs = pstmt.executeQuery()
+  	assert(rs.next)
+  	new algorithms.Weighting(
+  		proximity=rs.getFloat("setting_proximity"),
+  		timeliness=rs.getFloat("setting_timeliness"),
+  		hashtags=rs.getFloat("setting_hashtags"),
+  		popularity=rs.getFloat("setting_popularity")
+  	)
   }
 }
