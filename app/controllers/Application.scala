@@ -64,9 +64,9 @@ object Application extends Controller {
   	val stmt = conn.createStatement
   	stmt.executeUpdate(
   		"CREATE TABLE IF NOT EXISTS users ("
-  	  + "id int NOT NULL AUTO_INCREMENT,"
-  	  + "name varchar(255) DEFAULT '',"
-      + "handle varchar(255),"
+  	  + "id int SERIAL,"
+  	  + "name varchar DEFAULT '',"
+      + "handle varchar,"
       + "lat float DEFAULT 51.752022,"
       + "long float DEFAULT -1.257677," // default is Oxford
       + "setting_proximity float DEFAULT 1,"
