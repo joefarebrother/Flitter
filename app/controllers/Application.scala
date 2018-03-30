@@ -33,7 +33,7 @@ object Application extends Controller {
 			req.getQueryString(key) match {
 				case None => 1f
 				case Some(str) => try { 
-					math.max(1f, str.toFloat)
+					math.max(0f, math.min(1f, str.toFloat))
 				} catch {
 					case e: NumberFormatException => 1f
 				}
