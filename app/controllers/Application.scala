@@ -33,11 +33,11 @@ object Application extends Controller {
     
   }
 
-  def followUser = updateFollows("INSERT INTO usersFollowing (uid, following) VALUES (? ?)")
+  def followUser = updateFollows("INSERT INTO usersFollowing (uid, following) VALUES (?, ?)")
 
   def unfollowUser = updateFollows("DELETE FROM usersFollowing WHERE uid = ? AND following = ?")
 
-  def followHashtag = updateFollows("INSERT INTO hashtagsFollowing (uid, following) VALUES (? ?)")
+  def followHashtag = updateFollows("INSERT INTO hashtagsFollowing (uid, following) VALUES (?, ?)")
 
 	def unfollowHashtag = updateFollows("DELETE FROM hashtagsFollowing WHERE uid = ? AND following = ?")
 
