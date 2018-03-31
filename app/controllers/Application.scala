@@ -1,3 +1,5 @@
+Skip to content
+
 package controllers
 
 import algorithms._
@@ -106,7 +108,28 @@ object Application extends Controller {
   }
 
   def getTweets = Action {
-  	// 	TODO: This is where the backend interface is required
+	val fileName = //need file name of json (I dont know)
+  	val stream = new FileInputStream(new File(fileName))
+	val json = try { Json.parse(stream) } finally { stream.close() }
+	case class Tweet(id: Int, 
+                   user:String,
+                   timestamp: java.time.LocalDateTime, 
+                   hashtags: List[String], 
+                   text: String, 
+                   location: Location, 
+                   retweets: Int, 
+                   favourites: Int)
+	object Tweet {
+		implicit val jsonReadsL Reads[Tweet] = (
+			(JsPath \ "id").read[Int] and
+			(JsPath \ "user" \ "name").read[String] and
+			(JsPath \ "created_at").read[String] and
+			(JsPath \ "entities" \ "hashtags").read[List[String]] and
+			(JsPath \ "geo").read[Location] and
+			(JsPath \ "retweet_count").read[Int] and
+			(JsPath \ "favorite_count").read[Int])(Tweet.apply _)
+	}	
+	val result = json.as[Seq[Tweet]]
   	val the_tweets = List(
   		new algorithms.Tweet(
   			id=1,
@@ -131,6 +154,7 @@ object Application extends Controller {
   			favourites=42
   		)
   	)
+	the_tweets = result ++ the_tweets //This might not be the correct syntax
 
   	val user_handle = "user1"
   	DB.withConnection { conn =>
@@ -236,3 +260,4 @@ object Application extends Controller {
   		+ "PRIMARY KEY(id))")
   }
 }
+
