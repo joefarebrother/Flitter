@@ -118,8 +118,8 @@ object Application extends Controller {
 		val time_fmt = java.time.format.DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss xxxx yyyy")
 		/* example timestamp: Tue Mar 20 08:45:29 +0000 2018 */
 		implicit val jsonReadsL: Reads[algorithms.Tweet] = (
-			(JsPath \ "id").read[Int] and
-			(JsPath \ "user" \ "handle").read[String] and
+			(JsPath \ "id").read[Long] and
+			(JsPath \ "user" \ "screen_name").read[String] and
 			(JsPath \ "created_at").read[String].map(LocalDateTime.parse(_, time_fmt)) and
 			(JsPath \ "entities" \ "hashtags").read[List[String]] and
 			(JsPath \ "text").read[String] and

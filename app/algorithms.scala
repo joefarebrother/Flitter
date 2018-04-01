@@ -11,7 +11,7 @@ object algorithms {
 
   /***** Tweets *****/
   
-  case class Tweet(id: Int, 
+  case class Tweet(id: Long, 
                    user:String, // tweets have a twitter user, not a user of our system
                    timestamp: java.time.LocalDateTime, 
                    hashtags: List[String], 
@@ -114,6 +114,7 @@ object algorithms {
       val hashtags = tweet.hashtags
       val hashtagsFollowing = me.hashtagsFollowing
       val usersize = hashtagsFollowing.size
+      if (usersize == 0){return 0} // avoid div by 0
       var n=0
 
       // n is the number of matching hashtags
@@ -125,7 +126,7 @@ object algorithms {
         }
       }
       // 0<= n/usersize <= 1
-      value = (n/usersize)*10
+      value = (n/usersize+1)*10
 
       validate(value);
       return value;
