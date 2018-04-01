@@ -105,23 +105,33 @@ object Application extends Controller {
 			
 	}
 
+	// boilerplate for parsing, doesn't work inside the method.
+	// TODO: put this in its own file
+	case class Hashtag(indices: List[Int], text: String)
+	implicit val hashtagReads: Reads[Hashtag] = Json.reads[Hashtag]
+
 	def getTweets = Action {
-		val filepath = "Backend/data_small.json" // data_formatted gives errors
+		val filepath = "Backend/data_formatted.json" // data_formatted gives errors
 		val stream = new FileInputStream(new File(filepath))
 		val json = try { Json.parse(stream) } finally { stream.close() }
+
+		// A few functions and classes required to parse the data 
+		// (TODO: probably would be better to put them in another file)
 		def coordsToLoc(c: Option[List[Float]]): algorithms.Location = {
 			c match {
 				case Some(List(lat, long)) => new algorithms.Location(lat=lat, long=long)
 				case _  => algorithms.Location(lat=0, long=0) // default              
 			}		
 		}
+
+		// example timestamp: Tue Mar 20 08:45:29 +0000 2018
 		val time_fmt = java.time.format.DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss xxxx yyyy")
-		/* example timestamp: Tue Mar 20 08:45:29 +0000 2018 */
-		implicit val jsonReadsL: Reads[algorithms.Tweet] = (
+
+		implicit val tweetReads: Reads[algorithms.Tweet] = (
 			(JsPath \ "id").read[Long] and
 			(JsPath \ "user" \ "screen_name").read[String] and
 			(JsPath \ "created_at").read[String].map(LocalDateTime.parse(_, time_fmt)) and
-			(JsPath \ "entities" \ "hashtags").read[List[String]] and
+			(JsPath \ "entities" \ "hashtags").read[List[Hashtag]].map(_.map(_.text)) and
 			(JsPath \ "text").read[String] and
 			(JsPath \\ "coordinates").readNullable[List[Float]].map(coordsToLoc _) and
 			(JsPath \ "retweet_count").read[Int] and
@@ -129,6 +139,7 @@ object Application extends Controller {
 		)(algorithms.Tweet.apply _)
 			
 
+		// the actual code
 		val the_tweets = json.as[List[algorithms.Tweet]]
 
 		val user_handle = "user1"
