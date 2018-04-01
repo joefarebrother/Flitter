@@ -106,7 +106,7 @@ object Application extends Controller {
 	}
 
 	def getTweets = Action {
-		val filepath = "Backend/data_formatted.json"
+		val filepath = "Backend/data_small.json" // data_formatted gives errors
 		val stream = new FileInputStream(new File(filepath))
 		val json = try { Json.parse(stream) } finally { stream.close() }
 		def coordsToLoc(c: Option[List[Float]]): algorithms.Location = {
@@ -115,7 +115,7 @@ object Application extends Controller {
 				case _  => algorithms.Location(lat=0, long=0) // default              
 			}		
 		}
-		val time_fmt = java.time.format.DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss xxxxx yyyy")
+		val time_fmt = java.time.format.DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss xxxx yyyy")
 		/* example timestamp: Tue Mar 20 08:45:29 +0000 2018 */
 		implicit val jsonReadsL: Reads[algorithms.Tweet] = (
 			(JsPath \ "id").read[Int] and
