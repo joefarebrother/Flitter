@@ -216,7 +216,7 @@ object algorithms {
     val popularity = new TweetPopularity(user);
     val measures = new Measures(proximity, timeliness, hashtags, popularity);
     
-    return tweets.sortWith(score(_, measures, weights) < score(_, measures, weights));
+    return tweets.sortWith(score(_, measures, weights) > score(_, measures, weights));
   }
   
 }
