@@ -115,14 +115,12 @@ object Application extends Controller {
 				case _  => algorithms.Location(lat=0, long=0) // default              
 			}		
 		}
-		def timestampToLocalDateTime(ms: Int) = {
-			LocalDateTime.ofInstant(Instant.ofEpochMilli(ms), 
-                                java.util.TimeZone.getDefault().toZoneId())
-		}
+		val time_fmt = java.time.format.DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss xxxxx yyyy")
+		/* example timestamp: Tue Mar 20 08:45:29 +0000 2018 */
 		implicit val jsonReadsL: Reads[algorithms.Tweet] = (
 			(JsPath \ "id").read[Int] and
 			(JsPath \ "user" \ "handle").read[String] and
-			(JsPath \ "timestamp_ms").read[Int].map(timestampToLocalDateTime _) and
+			(JsPath \ "created_at").read[String].map(LocalDateTime.parse(_, time_fmt)) and
 			(JsPath \ "entities" \ "hashtags").read[List[String]] and
 			(JsPath \ "text").read[String] and
 			(JsPath \\ "coordinates").readNullable[List[Float]].map(coordsToLoc _) and
