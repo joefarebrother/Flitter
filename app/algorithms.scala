@@ -13,6 +13,7 @@ object algorithms {
   
   case class Tweet(id: Long, 
                    user:String, // tweets have a twitter user, not a user of our system
+                   userFollowerCount: Int,
                    timestamp: java.time.LocalDateTime, 
                    hashtags: List[String], 
                    text: String, 
@@ -159,7 +160,9 @@ object algorithms {
     def measure(tweet: Tweet): Float = {
       var value = 0.0f; // Value to be returned
       
-      //insert algoritm here
+      value = tweet.userFollowerCount;
+      if (value > 1000000) value = 1000000;
+      value./=(100000);
       
       validate(value);
       return value;
@@ -185,14 +188,16 @@ object algorithms {
   case class Weighting(proximity: Float, 
                        timeliness: Float, 
                        hashtags: Float, 
-                       popularity: Float)
+                       popularity: Float,
+                       user: Float)
     
 
   
   case class Measures(proximity: Proximity, 
                       timeliness: Timeliness, 
                       hashtags: Hashtags, 
-                      popularity: TweetPopularity)
+                      popularity: TweetPopularity,
+                      user: UserPopularity)
   
   def score(tweet: Tweet, measures: Measures, weights: Weighting): Float =
   // Assigns a score to a given tweet using various measures of relevance
@@ -201,7 +206,8 @@ object algorithms {
       weights.proximity * measures.proximity.measure(tweet) +
       weights.timeliness * measures.timeliness.measure(tweet) +
       weights.hashtags * measures.hashtags.measure(tweet) +
-      weights.popularity * measures.popularity.measure(tweet)
+      weights.popularity * measures.popularity.measure(tweet) +
+      weights.user * measures.user.measure(tweet)
     }
     tweet.score = result;
     return result;
@@ -214,7 +220,8 @@ object algorithms {
     val timeliness = new Timeliness(user);
     val hashtags = new Hashtags(user);
     val popularity = new TweetPopularity(user);
-    val measures = new Measures(proximity, timeliness, hashtags, popularity);
+    val userPopularity = new UserPopularity(user);
+    val measures = new Measures(proximity, timeliness, hashtags, popularity, userPopularity);
     
     return tweets.sortWith(score(_, measures, weights) > score(_, measures, weights));
   }
