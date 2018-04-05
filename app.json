@@ -1,0 +1,6 @@
+{
+  "name": "Flitter",
+  "description": "A mock social network to experiment with different algorithms used to sort content.",
+  "image": "",
+  "addons": [ "heroku-postgresql" ]
+}
