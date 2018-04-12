@@ -22,6 +22,7 @@ object parsing {
 	implicit val tweetReads: Reads[algorithms.Tweet] = (
 		(JsPath \ "id").read[Long] and
 		(JsPath \ "user" \ "screen_name").read[String] and
+		(JsPath \ "user" \ "followers_count").read[Int] and
 		(JsPath \ "created_at").read[String].map(LocalDateTime.parse(_, timeFmt)) and
 		(JsPath \ "entities" \ "hashtags").read[List[Hashtag]].map(_.map(_.text)) and
 		(JsPath \ "text").read[String] and
