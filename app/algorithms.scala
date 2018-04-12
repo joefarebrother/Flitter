@@ -126,7 +126,7 @@ object algorithms {
         }
       }
       // 0<= n/usersize <= 1
-      value = (n/usersize+1)*10
+      value = (n.toFloat/(usersize+1).toFloat)*10.0f
 
       validate(value);
       return value;
