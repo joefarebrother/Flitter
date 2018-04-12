@@ -115,6 +115,7 @@ object Application extends Controller {
 
 		val the_tweets = parsing.parseTweets(json)
 
+
 		val user_handle = "user1"
 		DB.withConnection { implicit conn =>
 			val user = getUserWithFollowing(getUserByHandle(user_handle))
@@ -219,4 +220,3 @@ object Application extends Controller {
 			+ "PRIMARY KEY(id))")
 	}
 }
-
