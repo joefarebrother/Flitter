@@ -9,22 +9,11 @@ import play.api.Play.current
 
 import play.api.db._
 import play.api.libs.json._
-import play.api.libs.functional.syntax._
 
-import java.time._
 import java.io._
+import java.sql._
 
 object Application extends Controller {
-
-	implicit val locWrites = Json.writes[algorithms.Location]
-	val tweetWrites1 = Json.writes[algorithms.Tweet] // doesn't include score
-
-	implicit val tweetWrites = new Writes[algorithms.Tweet]{
-		def writes(tweet: algorithms.Tweet) = {
-			tweetWrites1.writes(tweet) ++ Json.obj("score" -> tweet.score)
-		}
-	}
-
 
 	def index = Action {
 	  Ok(views.html.index())
@@ -32,17 +21,17 @@ object Application extends Controller {
 
 	def usersettings = Action {
 		val user_handle = "user1" // placeholder
-		DB.withConnection{conn =>
+		DB.withConnection{ implicit conn =>
 			Ok(views.html.usersettings(
-				getUserWithFollowing(conn, getUserByHandle(conn, user_handle))))
+				getUserWithFollowing(getUserByHandle(user_handle))))
 		}
 	}
 
 	def algorithmsettings = Action {
 		val user_handle = "user1" // placeholder
-		DB.withConnection{conn =>
+		DB.withConnection{ implicit conn =>
 			Ok(views.html.algorithmsettings(
-				getWeighting(conn, getUserByHandle(conn, user_handle))))
+				getWeighting(getUserByHandle(user_handle))))
 		}
 	}
 
@@ -58,8 +47,8 @@ object Application extends Controller {
 
 	def updateFollows(query: String) = Action {req =>
 		val user_handle = "user1" // placeholder
-		DB.withConnection{conn =>
-			val user = getUserByHandle(conn, user_handle)
+		DB.withConnection{ implicit conn =>
+			val user = getUserByHandle(user_handle)
 			val pstmt = conn.prepareStatement(query)
 			pstmt.setInt(1, user.id)
 			pstmt.setString(2, req.getQueryString("name").getOrElse(""))
@@ -83,7 +72,7 @@ object Application extends Controller {
 		}
 
 		val user_handle = "user1" // placeholder
-		DB.withConnection { conn =>
+		DB.withConnection { implicit conn =>
 			val pstmt = conn.prepareStatement(
 				"UPDATE users SET "
 				+ "setting_proximity = ?,"
@@ -104,55 +93,39 @@ object Application extends Controller {
 		Ok("")
 			
 	}
+	
+	implicit val locWrites = Json.writes[algorithms.Location]
+	val tweetWrites1 = Json.writes[algorithms.Tweet] // doesn't include score
 
-	// boilerplate for parsing, doesn't work inside the method.
-	// TODO: put this in its own file
-	case class Hashtag(indices: List[Int], text: String)
-	implicit val hashtagReads: Reads[Hashtag] = Json.reads[Hashtag]
+	implicit val tweetWrites = new Writes[algorithms.Tweet]{
+		def writes(tweet: algorithms.Tweet) = {
+			tweetWrites1.writes(tweet) ++ Json.obj("score" -> tweet.score)
+		}
+	}
 
-	def getTweets = Action {
-		val filepath = "Backend/data_formatted.json" // data_formatted gives errors
+	def getTweets = Action { req =>
+		val filepath = if (req.getQueryString("small")==None){
+			"Backend/data_formatted.json"
+		}
+		else {
+			"Backend/data_small.json"
+		}
 		val stream = new FileInputStream(new File(filepath))
 		val json = try { Json.parse(stream) } finally { stream.close() }
 
-		// A few functions and classes required to parse the data 
-		// (TODO: probably would be better to put them in another file)
-		def coordsToLoc(c: Option[List[Float]]): algorithms.Location = {
-			c match {
-				case Some(List(lat, long)) => new algorithms.Location(lat=lat, long=long)
-				case _  => algorithms.Location(lat=0, long=0) // default              
-			}		
-		}
-
-		// example timestamp: Tue Mar 20 08:45:29 +0000 2018
-		val time_fmt = java.time.format.DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss xxxx yyyy")
-
-		implicit val tweetReads: Reads[algorithms.Tweet] = (
-			(JsPath \ "id").read[Long] and
-			(JsPath \ "user" \ "screen_name").read[String] and
-			(JsPath \ "created_at").read[String].map(LocalDateTime.parse(_, time_fmt)) and
-			(JsPath \ "entities" \ "hashtags").read[List[Hashtag]].map(_.map(_.text)) and
-			(JsPath \ "text").read[String] and
-			(JsPath \\ "coordinates").readNullable[List[Float]].map(coordsToLoc _) and
-			(JsPath \ "retweet_count").read[Int] and
-			(JsPath \ "favorite_count").read[Int]
-		)(algorithms.Tweet.apply _)
-			
-
-		// the actual code
-		val the_tweets = json.as[List[algorithms.Tweet]]
+		val the_tweets = parsing.parseTweets(json)
 
 		val user_handle = "user1"
-		DB.withConnection { conn =>
-			val user = getUserWithFollowing(conn, getUserByHandle(conn, user_handle))
-			val weights = getWeighting(conn, user)
+		DB.withConnection { implicit conn =>
+			val user = getUserWithFollowing(getUserByHandle(user_handle))
+			val weights = getWeighting(user)
 			val sorted = algorithms.sort(the_tweets, user, weights)
 
 			Ok(Json.toJson(sorted.take(100))) 	
 		}
 	}
 
-	def getUserByHandle(conn: java.sql.Connection, handle: String) = {
+	def getUserByHandle(handle: String)(implicit conn: Connection) = {
 		val stmt = conn.createStatement
 		stmt.executeUpdate(
 			"CREATE TABLE IF NOT EXISTS users ("
@@ -195,7 +168,7 @@ object Application extends Controller {
 		)
 	}
 
-	def getWeighting(conn: java.sql.Connection, user: algorithms.User) = {
+	def getWeighting(user: algorithms.User)(implicit conn: Connection) = {
 		val pstmt = conn.prepareStatement("SELECT * FROM users WHERE id = ?")
 		pstmt.setInt(1, user.id)
 		val rs = pstmt.executeQuery()
@@ -208,7 +181,7 @@ object Application extends Controller {
 		)
 	}
 
-	def getUserWithFollowing(conn: java.sql.Connection, user: algorithms.User) = {
+	def getUserWithFollowing(user: algorithms.User)(implicit conn: Connection) = {
 		createFollowingTables(conn)
 		var pstmt = conn.prepareStatement("SELECT * FROM usersFollowing WHERE uid = ?")
 		pstmt.setInt(1, user.id)
