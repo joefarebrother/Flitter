@@ -11,13 +11,13 @@ $("#go").click(()=>{
   	success: () => {
   		$("#status")
   			.text("Successfully updated settings")	
-  			.css("background", "#53c68c")
+  			.removeClass("error")
   			.fadeIn()
   	},
   	error: () => {
   		$("#status")
   			.text("An error occoured")
-  			.css("background", "#ff3333")
+  			.addClass("error")
   			.fadeIn()
   	},
   })

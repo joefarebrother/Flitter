@@ -78,13 +78,15 @@ object Application extends Controller {
 				+ "setting_proximity = ?,"
 				+ "setting_timeliness = ?,"
 				+ "setting_hashtags = ?,"
-				+ "setting_popularity = ?"
+				+ "setting_popularity = ?,"
+				+ "setting_userpopularity = ?"
 				+ "WHERE handle = ?")
 			pstmt.setFloat(1, getParam("proximity"))
 			pstmt.setFloat(2, getParam("timeliness"))
 			pstmt.setFloat(3, getParam("hashtags"))
-			pstmt.setFloat(4, getParam("popularity"))
-			pstmt.setString(5, user_handle)
+			pstmt.setFloat(4, getParam("tweetPopularity"))
+			pstmt.setFloat(5, getParam("userPopularity"))
+			pstmt.setString(6, user_handle)
 			pstmt.executeUpdate()
 		}
 
@@ -133,12 +135,14 @@ object Application extends Controller {
 			+ "id SERIAL,"
 			+ "name varchar DEFAULT '',"
 			+ "handle varchar,"
+			+ "password varchar DEFAULT 'hunter2',"
 			+ "lat float DEFAULT 51.752022,"
 			+ "long float DEFAULT -1.257677," // default is Oxford
 			+ "setting_proximity float DEFAULT 1,"
 			+ "setting_timeliness float DEFAULT 1,"
 			+ "setting_hashtags float DEFAULT 1,"
 			+ "setting_popularity float DEFAULT 1,"
+			+ "setting_userpopularity float DEFAULT 1,"
 			+ "setinng_userrelation float DEFAULT 1,"
 			+ "PRIMARY KEY(id))");
 
@@ -178,7 +182,8 @@ object Application extends Controller {
 			proximity=rs.getFloat("setting_proximity"),
 			timeliness=rs.getFloat("setting_timeliness"),
 			hashtags=rs.getFloat("setting_hashtags"),
-			popularity=rs.getFloat("setting_popularity")
+			popularity=rs.getFloat("setting_popularity"),
+			user=rs.getFloat("setting_userpopularity")
 		)
 	}
 

@@ -1,4 +1,4 @@
-@(w: algorithms.algorithms.Weighting)
+@(w: algorithms.algorithms.Weighting, max: Int=100)
 
 @main(List("sliders.css"), "algorithmsettings.js") {
 
@@ -10,27 +10,27 @@
   <div class="slidecontainer">
     <h5>Proximity <i class='glyphicon glyphicon-map-marker'></i></h5>
     <p>How close you are to the geographical location on the tweet</p>
-    <input type="range" min="0" max="100" value="@(w.proximity * 100)" class="slider" id="proximity">
+    <input type="range" min="0" max="@max" value="@(w.proximity * max)" class="slider" id="proximity">
   </div>
   <div class="slidecontainer">
     <h5>Timeliness <i class='glyphicon glyphicon-time'></i></h5>
     <p>How recent the tweet is</p>
-    <input type="range" min="0" max="100" value="@(w.timeliness * 100)" class="slider" id="timeliness">
+    <input type="range" min="0" max="@max" value="@(w.timeliness * max)" class="slider" id="timeliness">
   </div>
   <div class="slidecontainer">
     <h5>Hashtags <i class='glyphicon glyphicon-tags'></i></h5>
     <p>How well the hashtags match those which you are following</p>
-    <input type="range" min="0" max="100" value="@(w.hashtags * 100)" class="slider" id="hashtags">
+    <input type="range" min="0" max="@max" value="@(w.hashtags * max)" class="slider" id="hashtags">
   </div>
   <div class="slidecontainer">
     <h5>Tweet Popularity <i class='glyphicon glyphicon-fire'></i></h5>
     <p>How many people have retweeted or favourited the tweet</p>
-    <input type="range" min="0" max="100" value="@(w.popularity * 100)" class="slider" id="tweetPopularity">
+    <input type="range" min="0" max="@max" value="@(w.popularity * max)" class="slider" id="tweetPopularity">
   </div>
   <div class="slidecontainer">
       <h5>User Popularity <i class='glyphicon glyphicon-fire'></i><sup><i class='glyphicon glyphicon-user'></i></sup></h5>
     <p>How many followers the user who made the tweet has</p>
-    <input type="range" min="0" max="100" value="@(w.user * 100)" class="slider" id="userPopularity">
+    <input type="range" min="0" max="@max" value="@(w.user * max)" class="slider" id="userPopularity">
   </div>
 
   <br><br>
