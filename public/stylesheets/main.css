@@ -1,5 +1,6 @@
 .header {
   padding: 10px;
+  padding-top: 25px;
   background-color: #002147;
   position: -webkit-sticky;
   position: sticky;
@@ -12,10 +13,14 @@
 }
 
 .welcome {
-  position:absolute;
-  float:right;
+  position:fixed;
+  top: 0;
+  right: 0;
   color: #e6f1ff;
   font-size: 20px;
+  padding-right: 10px;
+  padding-top: 4px;
+  z-index: 2;
 }
 
 body {
