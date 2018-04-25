@@ -59,5 +59,5 @@ function displayTweets(tweets)
 $.ajax({
   url: "api/getTweets",
   success: (data) => {displayTweets(data)},
-  error: () => console.log("an error occoured") // should really put it in some span
+  error: () => $("nextTweet").addclass("error").text("An error occoured")
 })
