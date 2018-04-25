@@ -27,22 +27,44 @@ function displayTweet(tweet)
       }
     }
   }
-  
-  // Display tweet
-  var header = // user picture could go here
-      "<p> <span class='name'>" + tweet.user.name + "</span> &nbsp;" +
-      "<span class='handle'> @" + tweet.user.screen_name + "</span> &nbsp;&nbsp;" +
-      "<span class='relevance'><i class='glyphicon glyphicon-stats'></i> " + tweet.score + "</span> &nbsp;" +
-      "<span class='age'><i class='glyphicon glyphicon-time'></i> " + ageString + "</span></p>";
-  var content = "<div class='content'>" +
-      "<p class='text'>" + tweet.text + "</p>" +
-      // tweet image could go here
-      "</div>";
-  var footer = "<p><i class='glyphicon glyphicon-heart'></i> " + tweet.favourites +
-      " &nbsp; &nbsp; <i class='glyphicon glyphicon-retweet'></i> " + tweet.retweets + "</p>";
-  var next = document.getElementById('nextTweet');
-  next.outerHTML = "<div class='tweet'>" + header + content + footer +
-      "</div><div id='nextTweet'></div>";
+
+  function span(html){return $("<span>").html(html)}
+
+  // display tweet
+  var $tweet = $("<div class='tweet'>")
+  $tweet.append(
+    $("<p>") // profile pic could go here
+      .append($("<span class='name'>").text(tweet.user.name))
+      .append(span(" &nbsp;"))
+      .append(
+        $("<span class='handle'>").text("@" + tweet.user.screen_name))
+      .append(span(" &nbsp;&nbsp;"))
+      .append(
+        $("<span class='relevance'>")
+        .append("<i class='glyphicon glyphicon-stats'>")
+        .append($("<span>").text(tweet.score)))
+      .append(span(" &nbsp;"))
+      .append(
+        $("<span class='age'>")
+        .append("<i class='glyphicon glyphicon-time'>")
+        .append($("<span>").text(ageString))))
+
+  var $content = $("<div class='content'>")
+  $content.append($("<p class='text'>").text(tweet.text))
+  //tweet images could go here
+
+  $tweet.append($content)
+
+  $tweet.append(
+    $("<p>")
+      .append("<i class='glyphicon glyphicon-heart'>")
+      .append($("<span>").text(tweet.favourites))
+      .append(span(" &nbsp; &nbsp; "))
+      .append("<i class='glyphicon glyphicon-retweet'>")
+      .append($("<span>").text(tweet.retweets)))
+
+  $tweet.insertBefore("#nextTweet")
+    
 }
 
 function displayTweets(tweets)
