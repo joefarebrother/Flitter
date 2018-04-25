@@ -8,6 +8,11 @@ import java.time._
 object parsing {
 	case class Hashtag(indices: List[Int], text: String)
 	implicit val hashtagReads: Reads[Hashtag] = Json.reads[Hashtag]
+	case class Media(url: String, kind: String)
+	implicit val mediaReads: Reads[Media] = (
+		(JsPath \ "media_url").read[String] and
+		(JsPath \ "type").read[String]
+	)(Media.apply _)
 
 	def coordsToLoc(c: Option[List[Float]]): algorithms.Location = {
 		c match {
@@ -15,6 +20,11 @@ object parsing {
 			case _  => algorithms.Location(lat=0, long=0) // default              
 		}		
 	}
+
+	def extractPictures(m: Option[List[Media]]): List[String] = m match {
+		case Some(m) => m.filter(_.kind== "photo").map(_.url)
+		case None => List()
+	} 
 
 	// example timestamp: Tue Mar 20 08:45:29 +0000 2018
 	val timeFmt = java.time.format.DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss xxxx yyyy")
@@ -28,7 +38,9 @@ object parsing {
 		(JsPath \ "text").read[String] and
 		(JsPath \\ "coordinates").readNullable[List[Float]].map(coordsToLoc _) and
 		(JsPath \ "retweet_count").read[Int] and
-		(JsPath \ "favorite_count").read[Int]
+		(JsPath \ "favorite_count").read[Int] and
+		(JsPath \ "entities" \ "media").readNullable[List[Media]].map(extractPictures _) and
+		(JsPath \ "user" \ "profile_image_url_https").read[String]
 	)(algorithms.Tweet.apply _)
 
 	def parseTweets(json: JsValue) = json.as[List[algorithms.Tweet]]
