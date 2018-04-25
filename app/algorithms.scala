@@ -13,21 +13,18 @@ object algorithms {
   /***** Tweets *****/
   
   case class Tweet(id: Long, 
-                   user:String, // tweets have a twitter user, not a user of our system
-                   userFollowerCount: Int,
+                   user: TwitterUser,
                    timestamp: java.time.LocalDateTime, 
                    hashtags: List[String], 
                    text: String, 
                    location: Location, 
                    retweets: Int, 
                    favourites: Int,
-                   tweet_images: List[String],
-                   profile_picture: String)
+                   image_urls: List[String])
   {
     var score = 0: Float
   }
   // A Tweet object will represent a tweet and all its data
-  
   
   /***** Users *****/
   
@@ -35,9 +32,15 @@ object algorithms {
                   name: String,
                   handle: String,
                   location: Location,
-                  usersFollowing: List[String], // we're following a list of TWITTER users, not users of our system
+                  usersFollowing: List[String], // just their handles (screen names)
                   hashtagsFollowing: List[String]) 
   // A User object will represent a single user of the system and all their data
+
+  // all these are named the same as their corresponding JS properties for easier parsing
+  case class TwitterUser(name: String, 
+                         screen_name: String,
+                         followers_count: Int,
+                         profile_image_url_https: String)
   
   
   /***** Measures of Relevance *****/
@@ -163,7 +166,7 @@ object algorithms {
     def measure(tweet: Tweet): Float = {
       var value = 0.0f; // Value to be returned
       
-      value = tweet.userFollowerCount;
+      value = tweet.user.followers_count;
       if (value > 1000000) value = 1000000;
       value./=(100000);
       

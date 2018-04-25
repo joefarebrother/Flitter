@@ -97,6 +97,7 @@ object Application extends Controller {
 	}
 	
 	implicit val locWrites = Json.writes[algorithms.Location]
+	implicit val userWrites = Json.writes[algorithms.TwitterUser]
 	val tweetWrites1 = Json.writes[algorithms.Tweet] // doesn't include score
 
 	implicit val tweetWrites = new Writes[algorithms.Tweet]{

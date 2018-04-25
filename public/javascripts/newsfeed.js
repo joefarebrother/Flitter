@@ -30,8 +30,8 @@ function displayTweet(tweet)
   
   // Display tweet
   var header = // user picture could go here
-      "<p>" /*<span class='name'>" + tweet.user.name + "</span> &nbsp;"*/ +
-      "<span class='handle'> @" + tweet.user + "</span> &nbsp;&nbsp;" +
+      "<p> <span class='name'>" + tweet.user.name + "</span> &nbsp;" +
+      "<span class='handle'> @" + tweet.user.screen_name + "</span> &nbsp;&nbsp;" +
       "<span class='relevance'><i class='glyphicon glyphicon-stats'></i> " + tweet.score + "</span> &nbsp;" +
       "<span class='age'><i class='glyphicon glyphicon-time'></i> " + ageString + "</span></p>";
   var content = "<div class='content'>" +
