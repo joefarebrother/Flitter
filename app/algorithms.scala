@@ -3,6 +3,7 @@ package algorithms
 import scala.List
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.time.ZoneOffset
 import scala.concurrent.duration._
 import scala.math
 
@@ -90,8 +91,8 @@ object algorithms {
       var value = 0.0f; // Value to be returned
       val current = java.time.LocalDateTime.now()
       val tweetTime  = tweet.timestamp
-      val age = current.minusYears(tweetTime.getYear).minusDays(tweetTime.getDayOfYear).minusHours(tweetTime.getHour).minusMinutes(tweetTime.getMinute)
-      val ageInMins = age.getYear * 525600 + age.getDayOfYear * 1440 + age.getHour * 60 + age.getMinute
+      val ageInSecs = current.toEpochSecond(ZoneOffset.UTC) - tweetTime.toEpochSecond(ZoneOffset.UTC)
+      val ageInMins = ageInSecs/60
       //if age > 1 month, score = 0
       //if age > 7 days, score = 3
       //if age > 1 day, score = 6
