@@ -19,7 +19,9 @@ object algorithms {
                    text: String, 
                    location: Location, 
                    retweets: Int, 
-                   favourites: Int)
+                   favourites: Int,
+                   tweet_images: List[String],
+                   profile_picture: String)
   {
     var score = 0: Float
   }
