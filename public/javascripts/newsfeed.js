@@ -31,8 +31,8 @@ function displayTweet(tweet)
   function span(html){return $("<span>").html(html)}
 
   // display tweet
-  var $tweet = $("<div class='tweet'>")
-  $tweet.append(
+  var nextTweet = $("<div class='tweet'>")
+  nextTweet.append(
     $("<p>") // profile pic could go here
       .append($("<span class='name'>").text(tweet.user.name))
       .append(span(" &nbsp;"))
@@ -49,13 +49,13 @@ function displayTweet(tweet)
         .append("<i class='glyphicon glyphicon-time'>")
         .append($("<span>").text(ageString))))
 
-  var $content = $("<div class='content'>")
-  $content.append($("<p class='text'>").text(tweet.text))
+  var content = $("<div class='content'>")
+  content.append($("<p class='text'>").text(tweet.text))
   //tweet images could go here
 
-  $tweet.append($content)
+  nextTweet.append(content)
 
-  $tweet.append(
+  nextTweet.append(
     $("<p>")
       .append("<i class='glyphicon glyphicon-heart'>")
       .append($("<span>").text(tweet.favourites))
@@ -63,8 +63,7 @@ function displayTweet(tweet)
       .append("<i class='glyphicon glyphicon-retweet'>")
       .append($("<span>").text(tweet.retweets)))
 
-  $tweet.insertBefore("#nextTweet")
-    
+  $("#tweets").append(nextTweet)
 }
 
 function displayTweets(tweets)
