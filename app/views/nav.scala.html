@@ -7,5 +7,14 @@
     <a href='usersettings'>
       <i class='glyphicon glyphicon-user'></i><sup><i class='glyphicon glyphicon-cog'></i></sup>
     </a>
+
+    <span class="welcome"> 
+    	Welcome, <span class="current_user"></span>! (<a href="signin">change</a>) 
+    </span>
   </p>
+
+  <script>
+		var current_user = document.cookie.replace(/(?:(?:^|.*;\s*)user\s*\=\s*([^;]*).*$)|^.*$/, "$1") // this monstrosity of a regex apparently parses the cookie correctly - stolen from MDN
+		$(".current_user").text(current_user)
+  </script>
 </div>

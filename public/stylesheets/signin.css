@@ -1,9 +1,10 @@
-  body {
+body {
   background-color: #002147;
   font-family: 'Alegreya Sans', Helvetica, sans-serif;
-  }
+}
+
   
-  .block {
+.block {
   background-color: #003066;
   width: 45%;
   margin: auto;

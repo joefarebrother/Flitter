@@ -11,6 +11,13 @@
   text-align: center;
 }
 
+.welcome {
+  position:absolute;
+  float:right;
+  color: #e6f1ff;
+  font-size: 20px;
+}
+
 body {
   background-color: #cce4ff;
   font-family: 'Alegreya Sans', Helvetica, sans-serif;

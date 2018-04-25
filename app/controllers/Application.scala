@@ -15,46 +15,71 @@ import java.sql._
 
 object Application extends Controller {
 
-	def index = Action {
-	  Ok(views.html.index())
+	// Pages
+
+	def index = Action { req =>
+		if (req.cookies.get("user") == None) {
+			Redirect("/signin")
+		} 
+		else {
+	  	Ok(views.html.index())
+	  }
 	}
 
-	def usersettings = Action {
-		val user_handle = "user1" // placeholder
-		DB.withConnection{ implicit conn =>
-			Ok(views.html.usersettings(
-				getUserWithFollowing(getUserByHandle(user_handle))))
-		}
+	def usersettings = Action { req =>
+		req.cookies.get("user") match {
+			case None => Redirect("/signin")
+			case Some(c) => {
+				val user_handle = c.value
+				DB.withConnection{ implicit conn =>
+					Ok(views.html.usersettings(
+						getUserWithFollowing(getUserByHandle(user_handle))))
+				}
+			}
+		}		
 	}
 
-	def algorithmsettings = Action {
-		val user_handle = "user1" // placeholder
-		DB.withConnection{ implicit conn =>
-			Ok(views.html.algorithmsettings(
-				getWeighting(getUserByHandle(user_handle))))
-		}
+	def algorithmsettings = Action { req =>
+		req.cookies.get("user") match {
+			case None => Redirect("/signin")
+			case Some(c) => {
+				var user_handle = c.value
+				DB.withConnection{ implicit conn =>
+					Ok(views.html.algorithmsettings(
+						getWeighting(getUserByHandle(user_handle))))
+				}
+			} 
+		}		
 	}
+
+	def signin = Action{
+		Ok(views.html.signin())
+	}
+
+  // API
 
 	def followUser = updateFollows("INSERT INTO usersFollowing (uid, following) VALUES (?, ?)")
-
 	def unfollowUser = updateFollows("DELETE FROM usersFollowing WHERE uid = ? AND following = ?")
-
 	def followHashtag = updateFollows("INSERT INTO hashtagsFollowing (uid, following) VALUES (?, ?)")
-
 	def unfollowHashtag = updateFollows("DELETE FROM hashtagsFollowing WHERE uid = ? AND following = ?")
 
 
 
-	def updateFollows(query: String) = Action {req =>
-		val user_handle = "user1" // placeholder
-		DB.withConnection{ implicit conn =>
-			val user = getUserByHandle(user_handle)
-			val pstmt = conn.prepareStatement(query)
-			pstmt.setInt(1, user.id)
-			pstmt.setString(2, req.getQueryString("name").getOrElse(""))
-			pstmt.executeUpdate()
+	def updateFollows(query: String) = Action { req =>
+		req.cookies.get("user") match {
+			case None => BadRequest("Not signed in")
+			case Some(c) => {
+				var user_handle = c.value
+				DB.withConnection{ implicit conn =>
+					val user = getUserByHandle(user_handle)
+					val pstmt = conn.prepareStatement(query)
+					pstmt.setInt(1, user.id)
+					pstmt.setString(2, req.getQueryString("name").getOrElse(""))
+					pstmt.executeUpdate()
+				}
+				Ok("")
+			} 		
 		}
-		Ok("")
 	}
 
 
@@ -71,29 +96,34 @@ object Application extends Controller {
 			}
 		}
 
-		val user_handle = "user1" // placeholder
-		DB.withConnection { implicit conn =>
-			val pstmt = conn.prepareStatement(
-				"UPDATE users SET "
-				+ "setting_proximity = ?,"
-				+ "setting_timeliness = ?,"
-				+ "setting_hashtags = ?,"
-				+ "setting_popularity = ?,"
-				+ "setting_userpopularity = ?"
-				+ "WHERE handle = ?")
-			pstmt.setFloat(1, getParam("proximity"))
-			pstmt.setFloat(2, getParam("timeliness"))
-			pstmt.setFloat(3, getParam("hashtags"))
-			pstmt.setFloat(4, getParam("tweetPopularity"))
-			pstmt.setFloat(5, getParam("userPopularity"))
-			pstmt.setString(6, user_handle)
-			pstmt.executeUpdate()
-		}
+		req.cookies.get("user") match {
+			case None => BadRequest("Not signed in")
+			case Some(c) => {
+				var user_handle = c.value
+				
+				DB.withConnection { implicit conn =>
+					val pstmt = conn.prepareStatement(
+						"UPDATE users SET "
+						+ "setting_proximity = ?,"
+						+ "setting_timeliness = ?,"
+						+ "setting_hashtags = ?,"
+						+ "setting_popularity = ?,"
+						+ "setting_userpopularity = ?"
+						+ "WHERE handle = ?")
+					pstmt.setFloat(1, getParam("proximity"))
+					pstmt.setFloat(2, getParam("timeliness"))
+					pstmt.setFloat(3, getParam("hashtags"))
+					pstmt.setFloat(4, getParam("tweetPopularity"))
+					pstmt.setFloat(5, getParam("userPopularity"))
+					pstmt.setString(6, user_handle)
+					pstmt.executeUpdate()
+				}
 
-		// could update scores for each tweet here
+				// could update scores for each tweet here
 
-		Ok("")
-			
+				Ok("")
+			} 	
+		}	
 	}
 	
 	implicit val locWrites = Json.writes[algorithms.Location]
@@ -119,15 +149,23 @@ object Application extends Controller {
 		val the_tweets = parsing.parseTweets(json)
 
 
-		val user_handle = "user1"
-		DB.withConnection { implicit conn =>
-			val user = getUserWithFollowing(getUserByHandle(user_handle))
-			val weights = getWeighting(user)
-			val sorted = algorithms.sort(the_tweets, user, weights)
+		req.cookies.get("user") match {
+			case None => BadRequest("Not signed in")
+			case Some(c) => {
+				var user_handle = c.value
+				DB.withConnection { implicit conn =>
+					val user = getUserWithFollowing(getUserByHandle(user_handle))
+					val weights = getWeighting(user)
+					val sorted = algorithms.sort(the_tweets, user, weights)
 
-			Ok(Json.toJson(sorted.take(100))) 	
+					Ok(Json.toJson(sorted.take(100))) 	
+				}
+			} 		
 		}
 	}
+
+
+  // Helper functions
 
 	def getUserByHandle(handle: String)(implicit conn: Connection) = {
 		val stmt = conn.createStatement

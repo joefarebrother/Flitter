@@ -6,6 +6,7 @@
 GET     /                           controllers.Application.index
 GET     /usersettings               controllers.Application.usersettings
 GET     /algorithmsettings          controllers.Application.algorithmsettings
+GET     /signin                     controllers.Application.signin
 GET     /api/setAlgSettings         controllers.Application.setAlgSettings
 GET     /api/followUser             controllers.Application.followUser
 GET     /api/unfollowUser           controllers.Application.unfollowUser
