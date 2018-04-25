@@ -40,9 +40,12 @@ function displayTweet(tweet)
       "</div>";
   var footer = "<p><i class='glyphicon glyphicon-heart'></i> " + tweet.favourites +
       " &nbsp; &nbsp; <i class='glyphicon glyphicon-retweet'></i> " + tweet.retweets + "</p>";
-  var next = document.getElementById('nextTweet');
-  next.outerHTML = "<div class='tweet'>" + header + content + footer +
-      "</div><div id='nextTweet'></div>";
+  
+  var tweets = document.getElementById('tweets');
+  var nextTweet = document.createElement('div');
+  nextTweet.classList.add('tweet');
+  nextTweet.innerHTML = header + content + footer;
+  tweets.appendChild(nextTweet);
 }
 
 function displayTweets(tweets)
