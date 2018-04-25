@@ -1,4 +1,3 @@
-
 function displayTweet(tweet)
 // Takes a tweet object and adds the tweet to the bottom of the news feed
 {
@@ -33,7 +32,9 @@ function displayTweet(tweet)
   // display tweet
   var nextTweet = $("<div class='tweet'>")
   nextTweet.append(
-    $("<p>") // profile pic could go here
+    $("<p>")
+      .append($("<img>").src(tweet.user.profile_image_url_https)
+      .append(span(" &nbsp;&nbsp;"))
       .append($("<span class='name'>").text(tweet.user.name))
       .append(span(" &nbsp;"))
       .append(
