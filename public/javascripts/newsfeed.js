@@ -31,6 +31,8 @@ function displayTweet(tweet)
 
   // display tweet
   var nextTweet = $("<div class='tweet'>")
+  
+  // Create tweet header
   nextTweet.append(
     $("<p>")
       .append($("<img>").src(tweet.user.profile_image_url_https)
@@ -50,12 +52,22 @@ function displayTweet(tweet)
         .append("<i class='glyphicon glyphicon-time'>")
         .append($("<span>").text(ageString))))
 
+  // Create tweet content
   var content = $("<div class='content'>")
   content.append($("<p class='text'>").text(tweet.text))
-  //tweet images could go here
+  
+  // Insert any pictures
+  var i;
+  var pics = tweet.image_urls;
+  var n = pics.length;
+  for (i = 0; i < n; i++)
+  {
+    content.append($("<img>").src(pics[i])
+  }
 
   nextTweet.append(content)
 
+  // Add tweet footer
   nextTweet.append(
     $("<p>")
       .append("<i class='glyphicon glyphicon-heart'>")
