@@ -138,3 +138,59 @@ function followingHashtag(name) {
   }
   return isFollowing;
 }
+
+
+/*** Location Picker ***/
+var map;
+var marker = false;
+        
+function initMap() {
+ // Create map
+    var centerOfMap = new google.maps.LatLng(51, 0);
+ 
+    //Map options.
+    var options = {
+      center: centerOfMap,
+      zoom: 4
+    };
+ 
+    // Create the map object
+    map = new google.maps.Map(document.getElementById('map'), options);
+ 
+    // Listen for any clicks on the map
+    google.maps.event.addListener(map, 'click', function(event) {                
+        // Get the location that the user clicked
+        var clickedLocation = event.latLng;
+        // If the marker hasn't been added
+        if (marker === false) {
+            // Create the marker
+            marker = new google.maps.Marker({
+                position: clickedLocation,
+                map: map,
+                draggable: true //make it draggable
+            });
+            // Listen for drag events
+            google.maps.event.addListener(marker, 'dragend', function(event){
+                markerLocation();
+            });
+        } else {
+            // Marker has been added, so update its location
+            marker.setPosition(clickedLocation);
+        }
+        markerLocation();
+    });
+}
+        
+function markerLocation()
+// Updates textboxes storing Latitude and Longitude
+{
+    //Get location
+    var currentLocation = marker.getPosition();
+    //Add lat and lng values to a field that we can save
+    document.getElementById('lat').value = currentLocation.lat();
+    document.getElementById('lng').value = currentLocation.lng();
+}
+        
+        
+//Load the map when the page has finished loading
+google.maps.event.addDomListener(window, 'load', initMap);
