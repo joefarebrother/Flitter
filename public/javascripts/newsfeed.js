@@ -35,7 +35,7 @@ function displayTweet(tweet)
   // Create tweet header
   nextTweet.append(
     $("<p>")
-      .append($("<img>").src(tweet.user.profile_image_url_https)
+      .append($("<img>").attr("src", tweet.user.profile_image_url_https))
       .append(span(" &nbsp;&nbsp;"))
       .append($("<span class='name'>").text(tweet.user.name))
       .append(span(" &nbsp;"))
@@ -62,7 +62,7 @@ function displayTweet(tweet)
   var n = pics.length;
   for (i = 0; i < n; i++)
   {
-    content.append($("<img>").src(pics[i])
+    content.append($("<img>").attr("src", pics[i]))
   }
 
   nextTweet.append(content)
@@ -77,6 +77,9 @@ function displayTweet(tweet)
       .append($("<span>").text(tweet.retweets)))
 
   $("#tweets").append(nextTweet)
+
+  // remove broken images 
+  $("img").on("error", function(){$(this).remove()})
 }
 
 function displayTweets(tweets)
@@ -93,5 +96,5 @@ function displayTweets(tweets)
 $.ajax({
   url: "api/getTweets",
   success: (data) => {displayTweets(data)},
-  error: () => $("#nextTweet").addClass("error").text("An error occoured")
+  error: () => $("#tweets").after($("<span class='error'>").text("An error occured"))
 })
