@@ -38,7 +38,7 @@ function followUser(name) {
       users.push(name)
     },
     error: ()=>{
-      $("#userError").text("An error occoured.")
+      $("#userError").text("An error occured.")
     }
   })
 }
@@ -52,7 +52,7 @@ function unfollowUser(name, elem) {
       users.splice(users.indexOf(name))
     },
     error: ()=>{
-      $("#userError").text("An error occoured.")
+      $("#userError").text("An error occured.")
     }
   })
 }
@@ -102,7 +102,7 @@ function followHashtag(name) {
       hashtags.push(name)
     },
     error: ()=>{
-      $("#hashtagError").text("An error occoured.")
+      $("#hashtagError").text("An error occured.")
     }
   })
 }
@@ -116,7 +116,7 @@ function unfollowHashtag(name, elem) {
       hashtags.splice(hashtags.indexOf(name))
     },
     error: ()=>{
-      $("#hashtagError").text("An error occoured.")
+      $("#hashtagError").text("An error occured.")
     }
   })
 }
@@ -151,33 +151,29 @@ function initMap() {
     //Map options.
     var options = {
       center: centerOfMap,
-      zoom: 4
+      zoom: 7
     };
  
     // Create the map object
     map = new google.maps.Map(document.getElementById('map'), options);
  
+    marker = new google.maps.Marker({
+      position: {lat: Number($("#lat").val()), lng: Number($("#lng").val())},
+      map: map,
+      draggable: true
+    })
+
+    google.maps.event.addListener(marker, 'dragend', function(event){
+      markerLocation();
+    })
+
     // Listen for any clicks on the map
     google.maps.event.addListener(map, 'click', function(event) {                
-        // Get the location that the user clicked
-        var clickedLocation = event.latLng;
-        // If the marker hasn't been added
-        if (marker === false) {
-            // Create the marker
-            marker = new google.maps.Marker({
-                position: clickedLocation,
-                map: map,
-                draggable: true //make it draggable
-            });
-            // Listen for drag events
-            google.maps.event.addListener(marker, 'dragend', function(event){
-                markerLocation();
-            });
-        } else {
-            // Marker has been added, so update its location
-            marker.setPosition(clickedLocation);
-        }
-        markerLocation();
+      // Get the location that the user clicked
+      var clickedLocation = event.latLng;
+      // Marker has been added, so update its location
+      marker.setPosition(clickedLocation);
+      markerLocation();
     });
 }
         
@@ -190,6 +186,19 @@ function markerLocation()
     document.getElementById('lat').value = currentLocation.lat();
     document.getElementById('lng').value = currentLocation.lng();
 }
+
+$("#loc_update").click(()=>{
+  $.ajax({
+    url: "api/setLocation",
+    data: {lat: $("#lat").val(), long: $("#lng").val},
+    success: () => {
+      $("#mapStatus").text("Successfully updated location").removeClass("error").fadeIn()
+    },
+    error: () => {
+      $("#mapStatus").text("An error occured").addClass("error").fadeIn()
+    }
+  })
+})
         
         
 //Load the map when the page has finished loading

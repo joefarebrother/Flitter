@@ -3,7 +3,7 @@
 @main(List(), "usersettings.js") {
 
 <!-- Scripts for Google maps -->
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1UiDyO2ROyH36QKxHOQi872cqZu7RuyE"></script>
 
 <h2>User Settings</h2>
 
@@ -42,7 +42,7 @@
       </ul>
     </div>
   </div>
-  <br/><br/> <!--
+  <br/><br/> 
   <div>
     <h3>Your location</h3>
     <p>Click on a location on the map to select it. Drag the marker to change location.</p>
@@ -50,12 +50,16 @@
     <div id='map'></div>
       <br/>
       <div id='location'>
-        Longitude &nbsp; <input type="text" id="lat" readonly="yes"> &nbsp;&nbsp;&nbsp;&nbsp;
-        Latitude &nbsp; <input type="text" id="lng" readonly="yes"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <input type='button' value='Update Location'>
+        Latitude &nbsp; <input type="text" id="lat" readonly="yes" value="@u.location.lat"> &nbsp;&nbsp;&nbsp;&nbsp;
+        Longitude &nbsp; <input type="text" id="lng" readonly="yes" value="@u.location.long"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <input type='button' value='Update Location' id="loc_update">
     </div>
+
+    <p id='mapStatus'>
+        <!-- Error messages & success indicators -->
+    </p>
   </div>
-</div> -->
+</div> 
 
 <script type="text/javascript">
   var users = [

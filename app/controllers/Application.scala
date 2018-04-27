@@ -82,7 +82,34 @@ object Application extends Controller {
 		}
 	}
 
-
+	def setLocation = Action { req => 
+		req.cookies.get("user") match {
+			case None => BadRequest("Not signed in")
+			case Some(c) => {
+				var user_handle = c.value
+				(req.getQueryString("lat"), req.getQueryString("long")) match {
+					case (Some(lat), Some(long)) => try {
+						DB.withConnection{ implicit conn => 
+							val pstmt = conn.prepareStatement(
+								"UPDATE users SET "
+								+ "lat = ?,"
+								+ "long = ?"
+								+ "WHERE handle = ?")
+							pstmt.setFloat(1, lat.toFloat)
+							pstmt.setFloat(2, long.toFloat)
+							pstmt.setString(3, user_handle)
+							pstmt.executeUpdate()
+							Ok("")
+						}
+					}
+					catch{
+						case e: NumberFormatException => BadRequest("Bad number")
+					}
+					case _ => BadRequest("Missing parameter")
+				}
+			}
+		}
+	}
 
 	def setAlgSettings = Action { req =>
 		def getParam(key: String) = {
