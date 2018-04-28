@@ -34,7 +34,7 @@ function displayTweet(tweet)
   
   // Create tweet header
   nextTweet.append(
-    $("<p>")
+    $("<span>")
       .append($("<img>").attr("src", tweet.user.profile_image_url_https))
       .append(span(" &nbsp;&nbsp;"))
       .append($("<span class='name'>").text(tweet.user.name))
