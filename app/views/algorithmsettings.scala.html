@@ -8,27 +8,32 @@
   <h3>Features</h3>
   <h4>Adjust importance to affect your news feed</h4>
   <div class="slidecontainer">
-    <h5>Proximity <i class='glyphicon glyphicon-map-marker'></i></h5>
+    <h5>Proximity &nbsp;<i class='glyphicon glyphicon-map-marker'></i></h5>
     <p>How close you are to the geographical location on the tweet</p>
     <input type="range" min="0" max="@max" value="@(w.proximity * max)" class="slider" id="proximity">
   </div>
   <div class="slidecontainer">
-    <h5>Timeliness <i class='glyphicon glyphicon-time'></i></h5>
+    <h5>Timeliness &nbsp;<i class='glyphicon glyphicon-time'></i></h5>
     <p>How recent the tweet is</p>
     <input type="range" min="0" max="@max" value="@(w.timeliness * max)" class="slider" id="timeliness">
   </div>
   <div class="slidecontainer">
-    <h5>Hashtags <i class='glyphicon glyphicon-tags'></i></h5>
+    <h5>Hashtags &nbsp;<i class='glyphicon glyphicon-tags'></i></h5>
     <p>How well the hashtags match those which you are following</p>
     <input type="range" min="0" max="@max" value="@(w.hashtags * max)" class="slider" id="hashtags">
   </div>
   <div class="slidecontainer">
-    <h5>Tweet Popularity <i class='glyphicon glyphicon-fire'></i></h5>
+    <h5>User Relevance &nbsp;<i class='glyphicon glyphicon-user'></i><sup><i class='glyphicon glyphicon-check'></i></sup></h5>
+    <p>Whether you are following the user who made the tweet</p>
+    <input type="range" min="0" max="@max" value="@(w.userRelevance * max)" class="slider" id="userRelevance">
+  </div>
+  <div class="slidecontainer">
+    <h5>Tweet Popularity &nbsp;<i class='glyphicon glyphicon-fire'></i></h5>
     <p>How many people have retweeted or favourited the tweet</p>
     <input type="range" min="0" max="@max" value="@(w.popularity * max)" class="slider" id="tweetPopularity">
   </div>
   <div class="slidecontainer">
-      <h5>User Popularity <i class='glyphicon glyphicon-fire'></i><sup><i class='glyphicon glyphicon-user'></i></sup></h5>
+      <h5>User Popularity &nbsp;<i class='glyphicon glyphicon-user'></i><sup><i class='glyphicon glyphicon-fire'></i></sup></h5>
     <p>How many followers the user who made the tweet has</p>
     <input type="range" min="0" max="@max" value="@(w.user * max)" class="slider" id="userPopularity">
   </div>
