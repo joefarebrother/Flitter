@@ -1,3 +1,4 @@
+
 package algorithms
 
 import scala.List
@@ -101,14 +102,8 @@ object algorithms {
       //if age > 7 days, score = 3
       //if age > 1 day, score = 6
       //otherwise, score = ageInMins/1440 * 10
-      if (ageInMins < 1440) {value = ((1440 - ageInMins.toFloat) / 1440).toFloat * 10}
-        
-      else if(ageInMins < 10080) value = 6
-      
-      else if (ageInMins < 43800) value = 3
-      
-      else value = 0
-      
+      value = (11f/1200000000).floatValue()*ageInMins*ageInMins - (70f/120000).floatValue()*ageInMins + 10
+      if(value < 0) value = 0
       validate(value);
       return value;
     }
