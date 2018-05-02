@@ -22,7 +22,8 @@ object algorithms {
                    favourites: Int,
                    image_urls: List[String])
   {
-    var score = 0: Float
+    var score = 0: Float;
+    var scores: Weightings;
   }
   // A Tweet object will represent a tweet and all its data
   
@@ -208,13 +209,15 @@ object algorithms {
   def score(tweet: Tweet, measures: Measures, weights: Weighting): Float =
   // Assigns a score to a given tweet using various measures of relevance
   {
-    val result = {
-      weights.proximity * measures.proximity.measure(tweet) +
-      weights.timeliness * measures.timeliness.measure(tweet) +
-      weights.hashtags * measures.hashtags.measure(tweet) +
-      weights.popularity * measures.popularity.measure(tweet) +
+    val scores = new Weightings(
+      weights.proximity * measures.proximity.measure(tweet),
+      weights.timeliness * measures.timeliness.measure(tweet),
+      weights.hashtags * measures.hashtags.measure(tweet),
+      weights.popularity * measures.popularity.measure(tweet),
       weights.user * measures.user.measure(tweet)
-    }
+    );
+    tweet.scores = scores;
+    val result = scores.proximity + scores.timeliness + scores.hashtags + scores.popularity + scores.user;
     tweet.score = result;
     return result;
   }
