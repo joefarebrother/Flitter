@@ -98,10 +98,10 @@ object algorithms {
       val tweetTime  = tweet.timestamp
       val ageInSecs = current.toEpochSecond(ZoneOffset.UTC) - tweetTime.toEpochSecond(ZoneOffset.UTC)
       val ageInMins = ageInSecs/60
-      //if age > 1 month, score = 0
-      //if age > 7 days, score = 3
-      //if age > 1 day, score = 6
-      //otherwise, score = ageInMins/1440 * 10
+      //value is a continuous function between 0 and 10. 
+      //0mins old = 10
+      //1 week old ~5
+      //1 month old ~1
       value = (11f/1200000000).floatValue()*ageInMins*ageInMins - (70f/120000).floatValue()*ageInMins + 10
       if(value < 0) value = 0
       validate(value);
