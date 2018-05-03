@@ -17,9 +17,9 @@ filepath = './data.json'
 data = []
 seen_ids = []
 def register_tweet(tw):
-	global data, seen_ids
-	if (tw["id_str"] not in seen_ids):
-		data.append(tw)
+  global data, seen_ids
+  if (tw["id_str"] not in seen_ids):
+    data.append(tw)
     seen_ids.append(tw["id_str"])
 
 # load the data 
