@@ -151,7 +151,7 @@ object algorithms {
       
       val retweetFactor = 1;
       val favouriteFactor = 1;
-      val cutoff = 100000;
+      val cutoff = 5000;
 
       value = (tweet.retweets * retweetFactor + 
                tweet.favourites * favouriteFactor).toFloat / cutoff
