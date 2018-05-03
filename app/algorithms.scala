@@ -18,7 +18,7 @@ object algorithms {
                    timestamp: java.time.LocalDateTime, 
                    hashtags: List[String], 
                    text: String, 
-                   location: Location, 
+                   location: Option[Location], 
                    retweets: Int, 
                    favourites: Int,
                    image_urls: List[String])
@@ -81,11 +81,17 @@ object algorithms {
     }
     
     def measure(tweet: Tweet): Float = {
-      // We return the haversine distance between the `tweet` and the user, `me`
-      val distance = dist(tweet.location, me.location)
-      val value = (math.min(10, distance))
-      validate(value);
-      return value;
+      tweet.location match {
+        case None => 0
+        case Some(loc) => {
+          // We return the haversine distance between the `tweet` and the user, `me`
+          val distance = dist(loc, me.location)
+          val value = (math.min(10, distance))
+          validate(value);
+          return value;
+        }
+      }
+      
     }
   }
   

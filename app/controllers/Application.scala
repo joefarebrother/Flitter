@@ -14,7 +14,7 @@ import java.io._
 import java.sql._
 
 object Application extends Controller {
-
+	import algorithms._
 	// Pages
 
 	def index = Action { req =>
@@ -153,13 +153,13 @@ object Application extends Controller {
 		}	
 	}
 	
-	implicit val locWrites = Json.writes[algorithms.Location]
-	implicit val weightWrites = Json.writes[algorithms.Weighting]
-	implicit val userWrites = Json.writes[algorithms.TwitterUser]
-	val tweetWrites1 = Json.writes[algorithms.Tweet] // doesn't include scores
+	implicit val locWrites = Json.writes[Location]
+	implicit val weightWrites = Json.writes[Weighting]
+	implicit val userWrites = Json.writes[TwitterUser]
+	val tweetWrites1 = Json.writes[Tweet] // doesn't include scores
 
-	implicit val tweetWrites = new Writes[algorithms.Tweet]{
-		def writes(tweet: algorithms.Tweet) = {
+	implicit val tweetWrites = new Writes[Tweet]{
+		def writes(tweet: Tweet) = {
 			tweetWrites1.writes(tweet) ++
         Json.obj("score" -> tweet.score) ++
 			  Json.obj("scores" -> tweet.scores)
@@ -186,7 +186,7 @@ object Application extends Controller {
 				DB.withConnection { implicit conn =>
 					val user = getUserWithFollowing(getUserByHandle(user_handle))
 					val weights = getWeighting(user)
-					val sorted = algorithms.sort(the_tweets, user, weights)
+					val sorted = sort(the_tweets, user, weights)
 
 					Ok(Json.toJson(sorted.take(100))) 	
 				}
@@ -229,11 +229,11 @@ object Application extends Controller {
 			assert(rs.next)
 		}
 
-		new algorithms.User(
+		new User(
 			id=rs.getInt("id"),
 			name=rs.getString("name"),
 			handle=handle,
-			location=new algorithms.Location(
+			location=new Location(
 				lat=rs.getFloat("lat"),
 				long=rs.getFloat("long")
 			),
@@ -242,12 +242,12 @@ object Application extends Controller {
 		)
 	}
 
-	def getWeighting(user: algorithms.User)(implicit conn: Connection) = {
+	def getWeighting(user: User)(implicit conn: Connection) = {
 		val pstmt = conn.prepareStatement("SELECT * FROM users WHERE id = ?")
 		pstmt.setInt(1, user.id)
 		val rs = pstmt.executeQuery()
 		assert(rs.next)
-		new algorithms.Weighting(
+		new Weighting(
 			proximity=rs.getFloat("setting_proximity"),
 			timeliness=rs.getFloat("setting_timeliness"),
 			hashtags=rs.getFloat("setting_hashtags"),
@@ -257,7 +257,7 @@ object Application extends Controller {
 		)
 	}
 
-	def getUserWithFollowing(user: algorithms.User)(implicit conn: Connection) = {
+	def getUserWithFollowing(user: User)(implicit conn: Connection) = {
 		createFollowingTables(conn)
 		var pstmt = conn.prepareStatement("SELECT * FROM usersFollowing WHERE uid = ?")
 		pstmt.setInt(1, user.id)
