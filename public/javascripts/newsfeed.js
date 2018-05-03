@@ -66,16 +66,16 @@ function displayTweet(tweet)
                   popularity: ["fire"],
                   user: ["user", "fire"]}
   $.map(measures, (icons, m) => {
-    var wrap = $("<div class=bar_wrap>")
+    var wrap = $("<div class='bar_wrap'>")
     wrap.append(
-      $("<div class=bar_container>").append(
-        $("<div class=bar>")
+      $("<div class='bar_container'>").append(
+        $("<div class='bar'>")
         .addClass(m)
         .height(10*tweet.scores[m]+"%")))
     wrap.append(
       $("<i class='glyphicon'>")
       .addClass("glyphicon-"+icons[0]))
-    if (icons[1]) {
+    if (icons.length > 1) {
       wrap.append(
         $("<sup>").append(
           $("<i class='glyphicon'>")
