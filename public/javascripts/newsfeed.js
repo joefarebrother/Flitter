@@ -41,7 +41,7 @@ function displayTweet(tweet)
       .append(span(" &nbsp;"))
       .append(
         $("<span class='handle'>").text("@" + tweet.user.screen_name))
-      .append(span(" &nbsp;&nbsp;"))
+    .append(span(" &nbsp;&nbsp;"))
       .append(
         $("<span class='relevance'>")
         .append("<i class='glyphicon glyphicon-stats'>")
@@ -89,9 +89,17 @@ function displayTweets(tweets)
   var n = tweets.length;
   for (i = 0; i < n; i++)
   {
+    processTweet(tweets[i]);
     displayTweet(tweets[i]);
   }
 }
+
+function processTweet(tweet)
+	//Processes the content of the tweet, removing links
+	{
+		tweet.text = tweet.text.replace(/https:\/\/t.co\/([a-z]|[A-Z]|\d)*\s/g, ' ');
+		tweet.text = tweet.text.replace(/https:\/\/t.co\/([a-z]|[A-Z]|\d)*/g, '');
+	}
 
 $.ajax({
   url: "api/getTweets",
