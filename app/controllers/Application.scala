@@ -154,12 +154,15 @@ object Application extends Controller {
 	}
 	
 	implicit val locWrites = Json.writes[algorithms.Location]
+	implicit val weightWrites = Json.writes[algorithms.Weighting]
 	implicit val userWrites = Json.writes[algorithms.TwitterUser]
-	val tweetWrites1 = Json.writes[algorithms.Tweet] // doesn't include score
+	val tweetWrites1 = Json.writes[algorithms.Tweet] // doesn't include scores
 
 	implicit val tweetWrites = new Writes[algorithms.Tweet]{
 		def writes(tweet: algorithms.Tweet) = {
-			tweetWrites1.writes(tweet) ++ Json.obj("score" -> tweet.score)
+			tweetWrites1.writes(tweet) ++
+        Json.obj("score" -> tweet.score) ++
+			  Json.obj("scores" -> tweet.scores)
 		}
 	}
 
@@ -249,7 +252,8 @@ object Application extends Controller {
 			timeliness=rs.getFloat("setting_timeliness"),
 			hashtags=rs.getFloat("setting_hashtags"),
 			popularity=rs.getFloat("setting_popularity"),
-			user=rs.getFloat("setting_userpopularity")
+			user=rs.getFloat("setting_userpopularity"),
+			userRelevance=rs.getFloat("setinng_userrelation")
 		)
 	}
 
