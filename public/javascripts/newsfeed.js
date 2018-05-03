@@ -31,7 +31,9 @@ function displayTweet(tweet)
 
   // display tweet
   var nextTweet = $("<div class='tweet'>")
-  
+  var content = $("<div class='content'>")
+  var scores = $("<div class='scores'>")
+
   // Create tweet header
   nextTweet.append(
     $("<span>")
@@ -41,19 +43,51 @@ function displayTweet(tweet)
       .append(span(" &nbsp;"))
       .append(
         $("<span class='handle'>").text("@" + tweet.user.screen_name))
-    .append(span(" &nbsp;&nbsp;"))
+      .append(span(" &nbsp;&nbsp;"))
       .append(
         $("<span class='relevance'>")
         .append("<i class='glyphicon glyphicon-stats'>")
-        .append($("<span>").text(tweet.score)))
+        .append($("<span>").text(tweet.score))
+        .click(()=>{
+          $(".scores:visible").slideUp()
+          scores.slideDown()
+        }))
       .append(span(" &nbsp;"))
       .append(
         $("<span class='age'>")
         .append("<i class='glyphicon glyphicon-time'>")
         .append($("<span>").text(ageString))))
 
+  // Create histogram 
+  var measures = {proximity: ["map-marker"], 
+                  timeliness: ["time"], 
+                  hashtags: ["tags"], 
+                  userRelevance: ["user", "check"],
+                  popularity: ["fire"],
+                  user: ["user", "fire"]}
+  $.map(measures, (icons, m) => {
+    var wrap = $("<div class=bar_wrap>")
+    wrap.append(
+      $("<div class=bar_container>").append(
+        $("<div class=bar>")
+        .addClass(m)
+        .height(10*tweet.scores[m]+"%")))
+    wrap.append(
+      $("<i class='glyphicon'>")
+      .addClass("glyphicon-"+icons[0]))
+    if (icons[1]) {
+      wrap.append(
+        $("<sup>").append(
+          $("<i class='glyphicon'>")
+          .addClass("glyphicon-"+icons[1])))
+    }
+
+    scores.append(wrap)
+  })
+
+  nextTweet.append(scores)
+
   // Create tweet content
-  var content = $("<div class='content'>")
   content.append($("<p class='text'>").text(tweet.text))
   
   // Insert any pictures

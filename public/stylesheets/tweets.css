@@ -30,3 +30,31 @@
   overflow: auto;
   background-color: #ffffff;
 }
+
+.scores {
+    width: auto;
+    height: 100px;
+    display: none;
+    overflow: hidden;
+}
+.bar_wrap {
+  width: 16.6%;
+  height: 100%;
+  display: inline-block;
+  float: left;
+}
+
+.bar_container, .bar_wrap .glyphicon, .bar_wrap sup .glyphicon {
+  display: inline-block;
+  height: 50%;
+  width: 90%;
+  margin: 1%;
+  position: relative;
+}
+
+.bar {
+  width: 10px;
+  background: #002147;
+  position: absolute;
+  bottom: 0;
+}

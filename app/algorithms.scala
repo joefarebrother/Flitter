@@ -108,8 +108,9 @@ object algorithms {
       //0mins old = 10
       //1 week old ~5
       //1 month old ~1
-      value = (11f/1200000000).floatValue()*ageInMins*ageInMins - (70f/120000).floatValue()*ageInMins + 10
+      value = (11f/1200000000)*ageInMins*ageInMins - (70f/120000)*ageInMins + 10
       if(value < 0) value = 0
+      if(value > 10) value = 10
       validate(value);
       return value;
     }
