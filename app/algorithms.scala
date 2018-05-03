@@ -107,14 +107,12 @@ object algorithms {
       val current = java.time.LocalDateTime.now()
       val tweetTime  = tweet.timestamp
       val ageInSecs = current.toEpochSecond(ZoneOffset.UTC) - tweetTime.toEpochSecond(ZoneOffset.UTC)
-      val ageInMins = ageInSecs/60
+      val ageInDays = ageInSecs/60/60/24
       //value is a continuous function between 0 and 10. 
       //0mins old = 10
       //1 week old ~5
       //1 month old ~1
-      value = (11f/1200000000)*ageInMins*ageInMins - (70f/120000)*ageInMins + 10
-      if(value < 0) value = 0
-      if(value > 10) value = 10
+      value = 10/(1+ageInDays/7)
       validate(value);
       return value;
     }
