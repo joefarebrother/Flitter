@@ -68,7 +68,7 @@ object algorithms {
       // We use the haversine distance, as our location is given as longitude and latitudes
       val avgLongitude = (x.long - y.long) / 2.0
       val avgLatitude = (x.lat - y.lat) / 2.0
-      // R is Earth's radius, in meters
+      // R is Earth's radius, in meters 
       val R = 6371.0 * 1000.0
       
       // a = sin^2(avgLong) + cos(x.lat) * cos(y.lat) * sin^2(avgLat)
@@ -86,7 +86,7 @@ object algorithms {
         case Some(loc) => {
           // We return the haversine distance between the `tweet` and the user, `me`
           val distance = dist(loc, me.location)
-          val value = (math.min(10, distance))
+          val value = (10*math.min(1, 967000f / distance)) // roughly the vertical length of the uk in metres, so 2 points in the uk will get a score of 10 
           validate(value);
           return value;
         }

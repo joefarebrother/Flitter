@@ -20,8 +20,8 @@ object parsing {
 
 	def placeToLoc(p: Place): Location = {
 		val box = p.bounding_box.coordinates(0)
-		val lats = box.map(_(0))
-		val longs = box.map(_(1))
+		val lats = box.map(_(1))
+		val longs = box.map(_(0))
 		val avgLat = lats.sum / lats.length
 		val avgLong = longs.sum / longs.length
 
