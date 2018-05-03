@@ -31,32 +31,46 @@ function displayTweet(tweet)
 
   // display tweet
   var nextTweet = $("<div class='tweet'>")
+  var header = $("<span class='tweet_header'>")
   var content = $("<div class='content'>")
   var scores = $("<div class='scores'>")
+  var footer = $("<p class='tweet_footer'>)")
 
   // Create tweet header
-  nextTweet.append(
-    $("<span>")
-      .append($("<img>").attr("src", tweet.user.profile_image_url_https))
-      .append(span(" &nbsp;&nbsp;"))
-      .append($("<span class='name'>").text(tweet.user.name))
+  header 
+    .append($("<img>").attr("src", tweet.user.profile_image_url_https))
+    .append(span(" &nbsp;&nbsp;"))
+    .append($("<span class='name'>").text(tweet.user.name))
+    .append(span(" &nbsp;"))
+    .append(
+      $("<span class='handle'>").text("@" + tweet.user.screen_name))
+    .append(span(" &nbsp;&nbsp;"))
+    .append(
+      $("<span class='relevance'>")
+      .append("<i class='glyphicon glyphicon-stats'>")
+      .append(span("&nbsp;"))
+      .append($("<span>").text(tweet.score))
+      .click(()=>{
+        $(".scores:visible").slideUp()
+        scores.slideDown()
+      }))
+    .append(span(" &nbsp;"))
+    .append(
+      $("<span class='age'>")
+      .append("<i class='glyphicon glyphicon-time'>")
+      .append(span("&nbsp;"))
+      .append($("<span>").text(ageString)))
+  if (tweet.location) {
+    header
       .append(span(" &nbsp;"))
       .append(
-        $("<span class='handle'>").text("@" + tweet.user.screen_name))
-      .append(span(" &nbsp;&nbsp;"))
-      .append(
-        $("<span class='relevance'>")
-        .append("<i class='glyphicon glyphicon-stats'>")
-        .append($("<span>").text(tweet.score))
-        .click(()=>{
-          $(".scores:visible").slideUp()
-          scores.slideDown()
-        }))
-      .append(span(" &nbsp;"))
-      .append(
-        $("<span class='age'>")
-        .append("<i class='glyphicon glyphicon-time'>")
-        .append($("<span>").text(ageString))))
+        $("<span class='location'>")
+        .append("<i class='glyphicon glyphicon-map-marker'>")
+        .append($("<span>").text(tweet.location.name)))
+
+  }
+
+  nextTweet.append(header)
 
   // Create histogram 
   var measures = {proximity: ["map-marker"], 
@@ -102,13 +116,16 @@ function displayTweet(tweet)
   nextTweet.append(content)
 
   // Add tweet footer
-  nextTweet.append(
-    $("<p>")
-      .append("<i class='glyphicon glyphicon-heart'>")
-      .append($("<span>").text(tweet.favourites))
-      .append(span(" &nbsp; &nbsp; "))
-      .append("<i class='glyphicon glyphicon-retweet'>")
-      .append($("<span>").text(tweet.retweets)))
+  footer
+    .append("<i class='glyphicon glyphicon-heart'>")
+    .append(span("&nbsp;"))
+    .append($("<span>").text(tweet.favourites))
+    .append(span(" &nbsp; &nbsp; "))
+    .append("<i class='glyphicon glyphicon-retweet'>")
+    .append(span("&nbsp;"))
+    .append($("<span>").text(tweet.retweets))
+
+  nextTweet.append(footer)
 
   $("#tweets").append(nextTweet)
 

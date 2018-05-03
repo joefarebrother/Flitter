@@ -9,7 +9,7 @@ import scala.concurrent.duration._
 import scala.math
 
 object algorithms {
-  case class Location(lat: Float, long: Float)
+  case class Location(lat: Float, long: Float, name: String = "")
 
   /***** Tweets *****/
   

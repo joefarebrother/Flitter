@@ -190,7 +190,7 @@ function markerLocation()
 $("#loc_update").click(()=>{
   $.ajax({
     url: "api/setLocation",
-    data: {lat: $("#lat").val(), long: $("#lng").val},
+    data: {lat: $("#lat").val(), long: $("#lng").val()},
     success: () => {
       $("#mapStatus").text("Successfully updated location").removeClass("error").fadeIn()
     },

@@ -14,7 +14,7 @@ object parsing {
 	implicit val userReads = Json.reads[TwitterUser]
 
 	case class BoundingBox(coordinates: List[List[List[Float]]])
-	case class Place(bounding_box: BoundingBox)
+	case class Place(bounding_box: BoundingBox, full_name: String)
 	implicit val boxReads = Json.reads[BoundingBox]
 	implicit val placeReads = Json.reads[Place]  
 
@@ -25,7 +25,7 @@ object parsing {
 		val avgLat = lats.sum / lats.length
 		val avgLong = longs.sum / longs.length
 
-		new Location(lat=avgLat, long=avgLong)
+		new Location(lat=avgLat, long=avgLong, name=p.full_name)
 	}
 
 	case class Media(url: String, kind: String)
