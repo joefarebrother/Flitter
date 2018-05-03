@@ -2,6 +2,7 @@
 package algorithms
 
 import scala.List
+import scala.math._
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.ZoneOffset
@@ -65,17 +66,20 @@ object algorithms {
   // Measures relevance by proximity
   {
     def dist(x: Location, y: Location) : Float = {
+      // Longtitude and Latitude are measured in degrees, but we want radians to do trig with
+      def rad = toRadians _ // shorter
+
       // We use the haversine distance, as our location is given as longitude and latitudes
       val avgLongitude = (x.long - y.long) / 2.0
       val avgLatitude = (x.lat - y.lat) / 2.0
-      // R is Earth's radius, in meters 
+      // R is Earth's radius, meters 
       val R = 6371.0 * 1000.0
       
-      // a = sin^2(avgLong) + cos(x.lat) * cos(y.lat) * sin^2(avgLat)
-      val a = {scala.math.pow(scala.math.sin(avgLongitude), 2.0) +
-              scala.math.cos(x.long)*scala.math.cos(y.long)*scala.math.pow(scala.math.sin(avgLatitude), 2.0)}
-      // c = 2 * atan2(sqrt(a), sqrt(1-a))
-      val c = 2.0 * scala.math.atan2(scala.math.sqrt(a), scala.math.sqrt(1.0-a))
+      // a = sin^2(avgLong) + cos(x.long) * cos(y.long) * sin^2(avgLat)
+      val a = {pow(sin(rad(avgLongitude)), 2.0) +
+              cos(rad(x.long))*cos(rad(y.long))*pow(sin(rad(avgLatitude)), 2.0)}
+      // c = 2 * asin(sqrt(a))
+      val c = 2.0 * scala.math.asin(scala.math.sqrt(a))
       // d = R * c
       return (R * c).toFloat
     }
@@ -86,7 +90,7 @@ object algorithms {
         case Some(loc) => {
           // We return the haversine distance between the `tweet` and the user, `me`
           val distance = dist(loc, me.location)
-          val value = (10*math.min(1, 967000f / distance)) // roughly the vertical length of the uk in metres, so 2 points in the uk will get a score of 10 
+          val value = (10*math.min(1, 96700f / distance)) // roughly 1/10 of the vertical length of the uk in metres
           validate(value);
           return value;
         }
