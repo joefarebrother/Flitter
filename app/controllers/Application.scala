@@ -135,14 +135,16 @@ object Application extends Controller {
 						+ "setting_timeliness = ?,"
 						+ "setting_hashtags = ?,"
 						+ "setting_popularity = ?,"
-						+ "setting_userpopularity = ?"
+						+ "setting_userpopularity = ?,"
+						+ "setting_userrelevance = ?"
 						+ "WHERE handle = ?")
 					pstmt.setFloat(1, getParam("proximity"))
 					pstmt.setFloat(2, getParam("timeliness"))
 					pstmt.setFloat(3, getParam("hashtags"))
 					pstmt.setFloat(4, getParam("tweetPopularity"))
 					pstmt.setFloat(5, getParam("userPopularity"))
-					pstmt.setString(6, user_handle)
+					pstmt.setFloat(6, getParam("userRelevance"))
+					pstmt.setString(7, user_handle)
 					pstmt.executeUpdate()
 				}
 
@@ -212,7 +214,7 @@ object Application extends Controller {
 			+ "setting_hashtags float DEFAULT 1,"
 			+ "setting_popularity float DEFAULT 1,"
 			+ "setting_userpopularity float DEFAULT 1,"
-			+ "setinng_userrelation float DEFAULT 1,"
+			+ "setting_userrelevance float DEFAULT 1,"
 			+ "PRIMARY KEY(id))");
 
 		var pstmt = conn.prepareStatement("SELECT * FROM users WHERE handle = ?")
@@ -253,7 +255,7 @@ object Application extends Controller {
 			hashtags=rs.getFloat("setting_hashtags"),
 			popularity=rs.getFloat("setting_popularity"),
 			user=rs.getFloat("setting_userpopularity"),
-			userRelevance=rs.getFloat("setinng_userrelation")
+			userRelevance=rs.getFloat("setting_userrelevance")
 		)
 	}
 

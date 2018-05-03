@@ -177,16 +177,11 @@ object algorithms {
     }
   }
   
-  class UserRelationship(me: User) extends Measure(me)
+  class UserRelevance(me: User) extends Measure(me)
   // Measures relevance by proximity
   {
     def measure(tweet: Tweet): Float = {
-      var value = 0.0f; // Value to be returned
-      
-      //insert algoritm here
-      
-      validate(value);
-      return value;
+      if (me.usersFollowing.contains(tweet.user.screen_name)) {10} else {0}
     }
   }
   
@@ -207,7 +202,7 @@ object algorithms {
                       hashtags: Hashtags, 
                       popularity: TweetPopularity,
                       user: UserPopularity,
-                      userRelevance: UserRelationship)
+                      userRelevance: UserRelevance)
   
   def score(tweet: Tweet, measures: Measures, weights: Weighting): Float =
   // Assigns a score to a given tweet using various measures of relevance
@@ -240,7 +235,7 @@ object algorithms {
     val hashtags = new Hashtags(user);
     val popularity = new TweetPopularity(user);
     val userPopularity = new UserPopularity(user);
-    val userRelevance = new UserRelationship(user);
+    val userRelevance = new UserRelevance(user);
     val measures = new Measures(proximity, timeliness, hashtags, popularity, userPopularity, userRelevance);
     
     return tweets.sortWith(score(_, measures, weights) > score(_, measures, weights));
