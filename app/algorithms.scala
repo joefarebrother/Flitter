@@ -16,7 +16,7 @@ object algorithms {
   
   case class Tweet(id: Long, 
                    user: TwitterUser,
-                   timestamp: java.time.LocalDateTime, 
+                   timestamp: LocalDateTime, 
                    hashtags: List[String], 
                    text: String, 
                    location: Option[Location], 

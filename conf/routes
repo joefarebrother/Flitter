@@ -14,6 +14,7 @@ GET     /api/followHashtag          controllers.Application.followHashtag
 GET     /api/unfollowHashtag        controllers.Application.unfollowHashtag
 GET     /api/getTweets              controllers.Application.getTweets
 GET     /api/setLocation            controllers.Application.setLocation
+GET     /updateDB                   controllers.Application.updateDB
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

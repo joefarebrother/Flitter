@@ -127,6 +127,9 @@ function displayTweet(tweet)
 
   nextTweet.append(footer)
 
+  // debugging feature
+  footer.click(() => console.log(tweet))
+
   $("#tweets").append(nextTweet)
 
   // remove broken images 
