@@ -51,7 +51,7 @@
   background-color: white;
 }
 
-.bar_container, .bar_wrap .glyphicon, .bar_wrap sup .glyphicon {
+.bar_container, .icon_container {
   display: inline-block;
   height: 50%;
   width: 90%;

@@ -86,15 +86,17 @@ function displayTweet(tweet)
         $("<div class='bar'>")
         .addClass(m)
         .height(10*tweet.scores[m]+"%")))
-    wrap.append(
+    var icon_cont = $("<div class='icon_container'>") 
+    icon_cont.append(
       $("<i class='glyphicon'>")
       .addClass("glyphicon-"+icons[0]))
     if (icons.length > 1) {
-      wrap.append(
+      icon_cont.append(
         $("<sup>").append(
           $("<i class='glyphicon'>")
           .addClass("glyphicon-"+icons[1])))
     }
+    wrap.append(icon_cont)
 
     scores.append(wrap)
   })
