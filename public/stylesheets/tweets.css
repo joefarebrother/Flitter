@@ -32,11 +32,15 @@
 }
 
 .scores {
-    width: auto;
-    height: 100px;
-    display: none;
-    overflow: hidden;
-    padding-left: 20px;
+  width: auto;
+  height: 100px;
+  display: none;
+  overflow: hidden;
+  padding-left: 20px;
+}
+
+.tweet_footer {
+  padding-left: 10px;
 }
 
 .bar_wrap {
