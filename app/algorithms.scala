@@ -123,7 +123,7 @@ object algorithms {
   {
     def measure(tweet: Tweet): Float = {
       var value = 0.0f; // Value to be returned
-      val hashtags = tweet.hashtags
+      val hashtags = tweet.hashtags.toSet
       val hashtagsFollowing = me.hashtagsFollowing
       val usersize = hashtagsFollowing.size
       if (usersize == 0){return 0} // avoid div by 0
@@ -138,7 +138,7 @@ object algorithms {
         }
       }
       // 0<= n/usersize <= 1
-      value = (n.toFloat/(usersize+1).toFloat)*10.0f
+      value = (n.toFloat/usersize.toFloat)*10.0f
 
       validate(value);
       return value;

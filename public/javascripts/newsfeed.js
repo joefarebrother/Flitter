@@ -113,7 +113,11 @@ function displayTweet(tweet)
   var n = pics.length;
   for (i = 0; i < n; i++)
   {
-    content.append($("<img>").attr("src", pics[i]))
+    content.append($("<img>").attr({
+      src: pics[i],
+      width: "400px",
+      height: "200px"
+    }))
   }
 
   nextTweet.append(content)
