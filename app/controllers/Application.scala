@@ -259,7 +259,7 @@ object Application extends Controller {
 	// Helper functions
 
 	def getTweetsFromDB(implicit conn: Connection) = {
-		val rs = sqlQuery("SELECT * FROM tweets")
+		val rs = sqlQuery("SELECT * FROM tweets ORDER BY time ASC")
 		var tweets = List[Tweet]()
 		while (rs.next) {
 			val lat = rs.getFloat("lat")
