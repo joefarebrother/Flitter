@@ -27,6 +27,7 @@
 .content {
   padding-left: 12px;
   padding-right: 10px;
+	padding-bottom: 10px;
   overflow: auto;
   background-color: #ffffff;
 }
