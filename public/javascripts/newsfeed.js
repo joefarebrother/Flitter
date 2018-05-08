@@ -125,11 +125,11 @@ function displayTweet(tweet)
   // Add tweet footer
   footer
     .append("<i class='glyphicon glyphicon-heart'>")
-    .append(span("&nbsp;"))
+    .append(span("&nbsp;&nbsp;"))
     .append($("<span>").text(tweet.favourites))
-    .append(span(" &nbsp; &nbsp; "))
+    .append(span(" &nbsp; &nbsp; &nbsp;"))
     .append("<i class='glyphicon glyphicon-retweet'>")
-    .append(span("&nbsp;"))
+    .append(span("&nbsp;&nbsp;"))
     .append($("<span>").text(tweet.retweets))
 
   nextTweet.append(footer)
