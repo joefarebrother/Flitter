@@ -51,8 +51,9 @@ function displayTweet(tweet)
       .append(span("&nbsp;"))
       .append($("<span>").text(tweet.score))
       .click(()=>{
+        var vis = scores.is(":visible")
         $(".scores:visible").slideUp()
-        scores.slideDown()
+        if (!vis) scores.slideDown()
       }))
     .append(span(" &nbsp;"))
     .append(

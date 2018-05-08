@@ -17,7 +17,7 @@ function addToList(name, errID, inputID, listID, remove){
 }
 
 function addUser(name){
-  //console.log(name)
+  if (name.substr(0,1) != '@'){name = '@'+name;}
   addToList(name, "#userError","#addUserName", "#userList", unfollowUser);
 }
 
@@ -59,10 +59,10 @@ function unfollowUser(name, elem) {
 
 function userValid(name) {
   var valid = true;
-  if (name.substr(0,1) != '@'){valid = false;}
+  
   if (!/^[A-Za-z0-9_]{1,15}$/.test(name.substr(1))){valid = false;}
   if (!valid){
-    $('#userError').text('Invalid name. Names must start with @ and then contain only letters, numbers and underscores.');
+    $('#userError').text('Invalid name. Names must contain only letters, numbers and underscores.');
   }
   return valid;
 }
@@ -87,6 +87,7 @@ function addHashtag(name){
 
 $("#addHashtagButton").click(()=>{ 
   var name = $("#addHashtagName").val();
+  if (name.substr(0,1) != '#') {name='#'+name;}
   if (hashtagValid(name) && !followingHashtag(name))
   {
     followHashtag(name);
@@ -123,10 +124,10 @@ function unfollowHashtag(name, elem) {
 
 function hashtagValid(name) {
   var valid = true;
-  if (name.substr(0,1) != '#') {valid = false;}
+  
   if (!/^[A-Za-z_][A-Za-z0-9_]{0,150}$/.test(name.substr(1))) {valid = false;}
   if (!valid) {
-    $('#hashtagError').text('Invalid hashtag. Hashtags must start with # and then contain only letters, numbers and underscores. The # cannot be immediately followed by a number.');
+    $('#hashtagError').text('Invalid hashtag. Hashtags must contain only letters, numbers and underscores, and connot start with a number.');
   }
   return valid;
 }
@@ -192,7 +193,7 @@ $("#loc_update").click(()=>{
     url: "api/setLocation",
     data: {lat: $("#lat").val(), long: $("#lng").val()},
     success: () => {
-      $("#mapStatus").text("Successfully updated location").append("&nbsp; <i class='glyphicon glyphicon-ok-sign'></i>")
+      $("#mapStatus").html("Successfully updated location &nbsp; <i class='glyphicon glyphicon-ok-sign'></i>")
         .removeClass("error").fadeIn()
     },
     error: () => {

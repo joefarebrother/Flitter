@@ -33,6 +33,6 @@ class MyListener(StreamListener):
  
 mylistener = MyListener()
 twitter_stream = tweepy.Stream(auth, mylistener)
-twitter_stream.filter(track=['british','summer'])
+twitter_stream.filter(track=['british summer', 'brexit', 'infinity war'])
 twitter_stream.filter(locations!= null)
 twitter_stream.filter(retweet_count > 10)

@@ -134,7 +134,7 @@ object algorithms {
       {
         for(tag <- hashtags)
         {
-          if(following==tag){n = n+1}
+          if(following.toLowerCase==tag.toLowerCase){n = n+1}
         }
       }
       // 0<= n/usersize <= 1
