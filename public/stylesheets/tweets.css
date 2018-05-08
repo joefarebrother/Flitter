@@ -68,3 +68,10 @@
   position: absolute;
   bottom: 0;
 }
+
+
+#loading {
+  font-size: 1.8em;
+  text-align: center;
+	padding-right: 50px;
+}
