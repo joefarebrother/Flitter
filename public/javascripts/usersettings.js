@@ -192,7 +192,8 @@ $("#loc_update").click(()=>{
     url: "api/setLocation",
     data: {lat: $("#lat").val(), long: $("#lng").val()},
     success: () => {
-      $("#mapStatus").text("Successfully updated location").removeClass("error").fadeIn()
+      $("#mapStatus").text("Successfully updated location").append("&nbsp; <i class='glyphicon glyphicon-ok-sign'></i>")
+        .removeClass("error").fadeIn()
     },
     error: () => {
       $("#mapStatus").text("An error occured").addClass("error").fadeIn()

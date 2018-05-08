@@ -32,11 +32,15 @@
 }
 
 .scores {
-    width: auto;
-    height: 100px;
-    display: none;
-    overflow: hidden;
-    padding-left: 20px;
+  width: auto;
+  height: 100px;
+  display: none;
+  overflow: hidden;
+  padding-left: 20px;
+}
+
+.tweet_footer {
+  padding-left: 10px;
 }
 
 .bar_wrap {
@@ -63,4 +67,11 @@
   background: #002147;
   position: absolute;
   bottom: 0;
+}
+
+
+#loading {
+  font-size: 1.8em;
+  text-align: center;
+	padding-right: 50px;
 }

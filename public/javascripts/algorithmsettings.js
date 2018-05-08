@@ -10,7 +10,8 @@ $("#go").click(()=>{
   	data: data,
   	success: () => {
   		$("#status")
-  			.text("Successfully updated settings")	
+  			.text("  Successfully updated settings")
+		        .append("&nbsp; <i class='glyphicon glyphicon-ok-sign'></i>")
   			.removeClass("error")
   			.fadeIn()
   	},
