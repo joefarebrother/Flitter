@@ -24,7 +24,7 @@ h1 {
   font-size: 96px;
   font-weight: bold;
   margin-top: 60px;
-  margin-bottom: 40px;
+  margin-bottom: 0px;
   color: #ffffff;
 }
 
@@ -40,6 +40,16 @@ h3 {
   font-size: 24px;
   margin-top: 0px;
   margin-bottom: 10px;
+}
+
+.slogan {
+	font-size: 32px;
+	margin-top: 0px;
+	margin-bottom: 30px;
+	text-align: center;
+	color: #cce4ff;
+	font-family: 'Merienda', Helvetica, sans-serif;
+	font-style: italic;
 }
 
 .textbox {
