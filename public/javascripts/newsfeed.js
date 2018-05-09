@@ -114,9 +114,10 @@ function displayTweet(tweet)
   for (i = 0; i < n; i++)
   {
     content.append($("<img>").attr({
-      src: pics[i],
-      width: "400px",
-      height: "200px"
+      src: pics[i]
+    }).css({
+      "max-width": "400px",
+      "height": "auto"
     }))
   }
 
